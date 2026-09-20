@@ -52,7 +52,7 @@
         @endauth
     </div>
 </header>
-<section class="w-full min-h-screen flex flex-col justify-between">
+<section class="w-full min-h-screen flex flex-col">
     {{$slot}}
 </section>
 </body>
