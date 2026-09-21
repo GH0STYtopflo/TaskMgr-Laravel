@@ -12,7 +12,8 @@ class UpdateTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        //TODO: Configure
+        return true;
     }
 
     /**
@@ -23,7 +24,15 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'deadline' => ['required', 'date', 'after_or_equal:now'],
+            'users' => ['nullable', 'array'],
+            'categories' => ['nullable', 'array'],
+            'subtasks' => ['nullable', 'string', 'max:5000'],
+            'priority' => ['required', 'integer', 'min:1', 'max:20'],
+            'subIsDone*' => ['required', 'string'],
+            'existingSub*' => ['required', 'string', 'max:5000'],
         ];
     }
 }

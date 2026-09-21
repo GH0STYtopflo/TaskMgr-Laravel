@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\CategoryFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
-#[Guarded()]
+#[Guarded('')]
+#[Fillable('title', 'description', 'priority', 'deadline', 'status')]
 class Task extends Model
 {
     /** @use HasFactory<CategoryFactory> */
@@ -18,12 +20,12 @@ class Task extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class, 'category_tasks');
     }
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $this->belongsToMany(User::class, 'task_users')->withTimestamps();
     }
 
     public function comments(): HasMany

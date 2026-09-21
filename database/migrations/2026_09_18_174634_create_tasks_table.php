@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title', 255)->index();
             $table->string('description')->nullable();
-            $table->integer('priority', unsigned: true)->nullable()->index();
+            $table->integer('priority', unsigned: true)->index();
             $table->timestampTz('deadline')->default('now()')->index();
-            $table->enum('status', ['SUBMITTED', 'ONGOING', 'COMPLETED'])->index();
+            $table->enum('status', ['ONGOING', 'COMPLETED'])->index();
             $table->timestamps();
         });
 

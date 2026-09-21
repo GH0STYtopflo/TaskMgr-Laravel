@@ -12,7 +12,8 @@ class CreateTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // TODO: admin only
+        return true;
     }
 
     /**
@@ -23,7 +24,13 @@ class CreateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['string'],
+            'deadline' => ['required', 'date', 'after_or_equal:today'],
+            'users' => ['nullable', 'array'],
+            'categories' => ['nullable', 'array'],
+            'subtasks' => ['nullable', 'string', 'max:5000'],
+            'priority' => ['required', 'integer', 'min:1', 'max:20'],
         ];
     }
 }
