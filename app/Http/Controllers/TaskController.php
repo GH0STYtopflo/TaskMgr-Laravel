@@ -90,11 +90,13 @@ class TaskController extends Controller
     {
         $categories = Category::all();
         $users = User::all();
+        $comments = Comment::all();
 
         return view('tasks.show', [
             'task' => $task,
             'categories' => $categories,
-            'users' => $users
+            'users' => $users,
+            'comments' => $comments
         ]);
 
     }

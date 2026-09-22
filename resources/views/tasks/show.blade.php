@@ -4,7 +4,7 @@
 
 <x-layout title="Edit Task">
 
-    <div class="max-w-1/2 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10"
+    <div class="w-1/2 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10"
          style="background-color: #08032a">
         <div class="mx-auto mb-10">
             <h2 class="text-white font-bold text-3xl">
@@ -118,6 +118,42 @@
                    value="Delete"
                    class="bg-red-900 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
         </form>
+    </div>
+
+    <div class="w-1/2 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10 mb-5"
+         style="background-color: #08032a">
+        <div class="mx-auto mb-10">
+            <h2 class="text-white font-bold text-3xl">
+                Comment
+            </h2>
+        </div>
+
+        <form action="{{"/tasks/" . $task->id . "/comments"}}" method="POST">
+            @csrf
+
+            <input type="text" name="body" placeholder="comment"
+                   class="bg-white p-2 rounded mb-5 w-full">
+            @error('title')
+            <x-error :message="$message"></x-error>
+            @enderror
+            <input type="submit"
+                   value="Comment"
+                   class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold">
+        </form>
+
+        <div class="space-y-2 w-full mt-5">
+            <div class="mb-10">
+                <label class="text-white text-2xl font-bold">Comments</label>
+            </div>
+            @if(count($comments) > 0)
+                @foreach($comments as $comment)
+                    <x-comment-card :comment="$comment"></x-comment-card>
+                @endforeach
+            @else
+                <p class="text-white">No Comments for this task</p>
+            @endif
+        </div>
+
     </div>
 
 </x-layout>

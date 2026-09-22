@@ -8,7 +8,7 @@
     </div>
     <hr class="mt-3">
     <form method="POST" action={{"/tasks/" . $comment->task->id . "/comments/" . $comment->id}}>
-        <textarea name="body" class="w-full mt-2 text-white" rows="5" {{$comment->user->is(Auth::user()) ? "" : "readonly"}}>{{$comment->body}}</textarea>
+        <textarea name="body" class="w-full mt-2 text-white" rows="5" {{$comment->user->is(Auth::user()) || Auth::user()->is_admin ? "" : "readonly"}}>{{$comment->body}}</textarea>
 
         @if($comment->user->is(Auth::user()))
             @csrf
@@ -19,7 +19,7 @@
         @endif
     </form>
 
-    @if($comment->user->is(Auth::user()))
+    @if($comment->user->is(Auth::user()) || Auth::user()->is_admin)
         <form class="mt-3" method="POST" action={{"/tasks/" . $comment->task->id . "/comments/" . $comment->id}}>
             @csrf
             @method('DELETE')
