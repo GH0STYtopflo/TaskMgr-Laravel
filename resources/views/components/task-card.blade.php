@@ -3,10 +3,11 @@
     'description',
     'status',
     'id',
-    'date'
+    'date',
+    'nonAdmin'
 ])
 
-<a href="/tasks/{{$id}}">
+<a href="{{ $nonAdmin ? '/users/' . Auth::user()->id . '/tasks/' . $id : '/tasks/' . $id }}">
     <div class="flex items-center justify-between rounded-xl p-5 w-full cursor-pointer mb-3"
          style="background-color: #08032a">
 

@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\MiscController;
 use App\Http\Controllers\TaskController;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home');
@@ -32,4 +35,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tasks/{task}', [TaskController::class, 'show']);
     Route::patch('/tasks/{task}', [TaskController::class, 'update']);
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
+
+    Route::get('/dashboard', [MiscController::class, 'dashboard']);
+
+    //TODO: authorization for these two
+    Route::get('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminShow']);
+    Route::patch('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminUpdate']);
+
+    // Comments
+    Route::post('/tasks/{task}/comments', [CommentController::class, 'store']);
+    Route::patch('/tasks/{task}/comments/{comment}', [CommentController::class, 'update']);
+    Route::delete('/tasks/{task}/comments/{comment}', [CommentController::class, 'destroy']);
 });

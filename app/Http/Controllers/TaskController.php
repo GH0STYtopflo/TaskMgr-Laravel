@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Subtask;
 use App\Models\Task;
 use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -94,6 +96,7 @@ class TaskController extends Controller
             'categories' => $categories,
             'users' => $users
         ]);
+
     }
 
     /**
@@ -125,7 +128,9 @@ class TaskController extends Controller
 
         $task->subtasks()->createMany(array_map(fn ($subtask) => ['title' => $subtask], $subtasks));
 
-        foreach ($request->existingSubs as $i => $existingSub) {
+        $existingSubs = $request->existingSubs ?? [];
+
+        foreach ($existingSubs as $i => $existingSub) {
             Subtask::find($i)->update([
                 'title' => $existingSub,
                 'is_completed' => array_key_exists($i, $request->subIsdone) ? 1 : 0,
@@ -157,5 +162,34 @@ class TaskController extends Controller
         $task->delete();
 
         return redirect('/tasks');
+    }
+
+    public function nonAdminUpdate($user, Task $task, Request $request)
+    {
+        if (isset($request->taskIsDone) && $task->subtasks()->where('is_completed', '0')->count() > 0) {
+            return redirect()->back()->withErrors(['finished' => "task has active subtasks."]);
+        }
+
+        foreach ($task->subtasks as $subtask) {
+            $subtask->update([
+                'is_completed' => array_key_exists($subtask->id, $request->subIsdone),
+            ]);
+        }
+
+        $task->update([
+            'status' => $request->taskIsDone ? 'COMPLETED' : 'ONGOING',
+        ]);
+
+        return back();
+    }
+
+    public function nonAdminShow($user, Task $task)
+    {
+        $comments = $task->comments;
+
+        return view('user.non_admin.tasks.show', [
+            'task' => $task,
+            'comments' => $comments,
+        ]);
     }
 }
