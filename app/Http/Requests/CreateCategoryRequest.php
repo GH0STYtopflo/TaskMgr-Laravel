@@ -12,12 +12,12 @@ use Illuminate\Foundation\Http\FormRequest;
 class CreateCategoryRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Determine if the users is authorized to make this request.
      */
     public function authorize(User $user): bool
     {
         return true;
-        //return $user->is_admin;
+        //return $users->is_admin;
         // TODO: uncomment
     }
 
