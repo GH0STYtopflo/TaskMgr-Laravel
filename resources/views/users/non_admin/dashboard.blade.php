@@ -1,6 +1,11 @@
 <x-layout title="User Dashboard">
     <div class="w-full flex flex-col mx-auto justify-between p-10 rounded-xl mt-10">
-        <label class="text-3xl text-white mx-auto mb-10 font-bold">Your tasks</label>
+        <a href="{{"/users/" . Auth::id()}}" class="flex justify-center w-full">
+            <label class="p-4 bg-pink-500 w-1/5 text-center text-white font-bold rounded-2xl cursor-pointer text-2xl mb-15">Your account</label>
+        </a>
+
+        <label class="text-3xl text-white mx-auto font-bold mb-5">Your tasks</label>
+
         @if(count($tasks) > 0)
             <div class="grid grid-cols-5 gap-4">
                 @foreach($tasks as $task)

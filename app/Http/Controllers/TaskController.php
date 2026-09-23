@@ -189,7 +189,7 @@ class TaskController extends Controller
     {
         $comments = $task->comments;
 
-        return view('user.non_admin.tasks.show', [
+        return view('users.non_admin.tasks.show', [
             'task' => $task,
             'comments' => $comments,
         ]);
