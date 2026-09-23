@@ -8,43 +8,22 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Task $task ,Request $request)
+    public function index(Request $request)
     {
-        $task->comments()->create([
-            'user_id' => auth()->id(),
-            'body' => $request->body,
-        ]);
+        $comments = Comment::query()
+        ->when($request->username, function ($query, $username) {
+            $query->getModel()->user()->whereUsername($username);
+        })->when($request->task_id, function ($query, $task_id) {
+            $query->where('task_id', $task_id);
+        })->when($request->before, function ($query, $before) {
+            $query->where('created_at', '<=', $before);
+        })->when($request->after, function ($query, $after) {
+            $query->where('created_at', '>=', $after);
+        })->when($request->keyword, function ($query, $keyword) {
+            $query->where('body', 'like', "%$keyword%");
+        })
+            ->with(['task', 'user'])->get();
 
-        return back();
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update($task, Comment $comment, Request $request)
-    {
-        if ($comment->body == $request->body) {
-            return back();
-        }
-
-        $comment->update([
-            'body' => $request->body,
-        ]);
-
-        return back();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($task, Comment $comment)
-    {
-        $comment->delete();
-
-        return back();
+        return view('comments.index', ['comments' => $comments]);
     }
 }

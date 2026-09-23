@@ -43,7 +43,9 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminUpdate']);
 
     // Comments
-    Route::post('/tasks/{task}/comments', [CommentController::class, 'store']);
-    Route::patch('/tasks/{task}/comments/{comment}', [CommentController::class, 'update']);
-    Route::delete('/tasks/{task}/comments/{comment}', [CommentController::class, 'destroy']);
+    Route::post('/tasks/{task}/comments', [TaskController::class, 'storeTaskComment']);
+    Route::patch('/tasks/{task}/comments/{comment}', [TaskController::class, 'updateTaskComment']);
+    Route::delete('/tasks/{task}/comments/{comment}', [TaskController::class, 'destroyTaskComment']);
+    Route::get('/comments', [CommentController::class, 'index']);
+
 });
