@@ -2,60 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Comments\CreateTaskCommentAction;
+use App\Actions\Comments\DeleteTaskCommentAction;
+use App\Actions\Comments\QueryCommentsAction;
+use App\Actions\Comments\UpdateTaskCommentAction;
+use App\Http\Requests\QueryCommentsRequest;
 use App\Models\Comment;
 use App\Models\Task;
+use Gate;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function index(Request $request)
+    public function index(QueryCommentsRequest $request)
     {
-        $comments = Comment::query()
-        ->when($request->username, function ($query, $username) {
-            $query->getModel()->user()->whereUsername($username);
-        })->when($request->task_id, function ($query, $task_id) {
-            $query->where('task_id', $task_id);
-        })->when($request->before, function ($query, $before) {
-            $query->where('created_at', '<=', $before);
-        })->when($request->after, function ($query, $after) {
-            $query->where('created_at', '>=', $after);
-        })->when($request->keyword, function ($query, $keyword) {
-            $query->where('body', 'like', "%$keyword%");
-        })
-            ->with(['task', 'user'])->get();
+        $comments = QueryCommentsAction::do($request);
 
         return view('comments.index', ['comments' => $comments]);
     }
 
-
     public function storeTaskComment(Task $task ,Request $request)
     {
-        $task->comments()->create([
-            'user_id' => auth()->id(),
-            'body' => $request->body,
-        ]);
+        Gate::authorize('create', [Comment::class, $task]);
+
+        CreateTaskCommentAction::do($task, $request);
+
+        return back();
+    }
+
+    public function updateTaskComment(Task $task, Comment $comment, Request $request)
+    {
+        Gate::authorize('updateOrDestroy', [$comment, $task]);
+
+        UpdateTaskCommentAction::do($comment, $request);
 
         return back();
     }
 
 
-    public function updateTaskComment($task, Comment $comment, Request $request)
+    public function destroyTaskComment(Task $task, Comment $comment)
     {
-        if ($comment->body == $request->body) {
-            return back();
-        }
+        Gate::authorize('updateOrDestroy', [$comment, $task]);
 
-        $comment->update([
-            'body' => $request->body,
-        ]);
-
-        return back();
-    }
-
-
-    public function destroyTaskComment($task, Comment $comment)
-    {
-        $comment->delete();
+        DeleteTaskCommentAction::do($comment);
 
         return back();
     }
