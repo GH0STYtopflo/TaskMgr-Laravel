@@ -12,10 +12,10 @@ Route::view('/', 'home');
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/signup', [AuthController::class, 'signupView']);
-    Route::post('/signup', [AuthController::class, 'signup']);
+    Route::post('/signup', [AuthController::class, 'signup'])->middleware('throttle:3,1');
 
     Route::get('/login', [AuthController::class, 'loginView']);
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login')->middleware('throttle:10,1');
 });
 
 Route::middleware(['auth'])->group(function () {
