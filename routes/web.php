@@ -3,7 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\MiscController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +21,9 @@ Route::middleware(['auth'])->group(function () {
     // Logout
     Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    // User dash
+    Route::get('/users/{user}/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
+
     Route::middleware('can:admin-access')->group(function () {
         // Category
         Route::resource('categories', CategoryController::class)->except(['edit', 'create']);
@@ -34,7 +36,6 @@ Route::middleware(['auth'])->group(function () {
 
         // Users
         Route::resource('users', UserController::class)->except(['edit', 'create', 'store']);
-        Route::get('/users/{user}/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
     });
 
     //TODO: authorization for these two
