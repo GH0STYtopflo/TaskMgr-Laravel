@@ -24,6 +24,9 @@ Route::middleware(['auth'])->group(function () {
     // User dash
     Route::get('/users/{user}/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
 
+    // User show
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+
     Route::middleware('can:admin-access')->group(function () {
         // Category
         Route::resource('categories', CategoryController::class)->except(['edit', 'create']);
@@ -35,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
 
         // Users
-        Route::resource('users', UserController::class)->except(['edit', 'create', 'store']);
+        Route::resource('users', UserController::class)->except(['edit', 'create', 'store', 'show']);
     });
 
     //TODO: authorization for these two
