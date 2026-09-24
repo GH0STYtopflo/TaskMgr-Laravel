@@ -26,4 +26,37 @@ class CommentController extends Controller
 
         return view('comments.index', ['comments' => $comments]);
     }
+
+
+    public function storeTaskComment(Task $task ,Request $request)
+    {
+        $task->comments()->create([
+            'user_id' => auth()->id(),
+            'body' => $request->body,
+        ]);
+
+        return back();
+    }
+
+
+    public function updateTaskComment($task, Comment $comment, Request $request)
+    {
+        if ($comment->body == $request->body) {
+            return back();
+        }
+
+        $comment->update([
+            'body' => $request->body,
+        ]);
+
+        return back();
+    }
+
+
+    public function destroyTaskComment($task, Comment $comment)
+    {
+        $comment->delete();
+
+        return back();
+    }
 }

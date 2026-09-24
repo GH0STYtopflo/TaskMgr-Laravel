@@ -22,7 +22,7 @@ class AuthorizationProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('view-admin-dash', function (User $user) {
+        Gate::define('admin-access', function (User $user) {
             return $user->is_admin ? Response::allow() : Response::denyAsNotFound();
         });
     }
