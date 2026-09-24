@@ -11,16 +11,16 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'home');
 
 Route::middleware(['guest'])->group(function () {
-    Route::get('/signup', [AuthController::class, 'signupView']);
-    Route::post('/signup', [AuthController::class, 'signup'])->middleware('throttle:3,1');
+    Route::get('/signup', [AuthController::class, 'signupView'])->name('signup');
+    Route::post('/signup', [AuthController::class, 'signup'])->middleware('throttle:3,1')->name('signup');
 
-    Route::get('/login', [AuthController::class, 'loginView']);
+    Route::get('/login', [AuthController::class, 'loginView'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login')->middleware('throttle:10,1');
 });
 
 Route::middleware(['auth'])->group(function () {
     // Logout
-    Route::delete('/logout', [AuthController::class, 'logout']);
+    Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::middleware('can:admin-access')->group(function () {
         // Category
@@ -30,10 +30,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('tasks', TaskController::class)->except(['edit']);
 
         //Comments
-        Route::get('/comments', [CommentController::class, 'index']);
+        Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
 
         // Users
         Route::resource('users', UserController::class)->except(['edit', 'create', 'store']);
+        Route::get('/users/{user}/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
     });
 
     //TODO: authorization for these two
@@ -41,10 +42,7 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminUpdate']);
 
     // Task Comments
-    Route::post('/tasks/{task}/comments', [CommentController::class, 'storeTaskComment']);
-    Route::patch('/tasks/{task}/comments/{comment}', [CommentController::class, 'updateTaskComment']);
-    Route::delete('/tasks/{task}/comments/{comment}', [CommentController::class, 'destroyTaskComment']);
-
-
-    Route::get('/dashboard', [MiscController::class, 'dashboard']);
+    Route::post('/tasks/{task}/comments', [CommentController::class, 'storeTaskComment'])->name('tasks.comments.store');
+    Route::patch('/tasks/{task}/comments/{comment}', [CommentController::class, 'updateTaskComment'])->name('tasks.comments.update');
+    Route::delete('/tasks/{task}/comments/{comment}', [CommentController::class, 'destroyTaskComment'])->name('tasks.comments.destroy');
 });

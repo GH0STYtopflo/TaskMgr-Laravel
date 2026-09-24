@@ -9,9 +9,6 @@ use function Pest\Laravel\json;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $users = User::query()
@@ -54,9 +51,16 @@ class UserController extends Controller
         return back();
     }
 
-
     public function destroy(User $user)
     {
         $user->delete();
+    }
+
+    public function dashboard(User $user)
+    {
+        return $user->is_admin ?
+            view('users.admin.dashboard')
+            :
+            view('users.non_admin.dashboard', ['tasks' => $user->tasks]);
     }
 }
