@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -11,25 +12,20 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class CreateCategoryRequest extends FormRequest
 {
-    /**
-     * Determine if the users is authorized to make this request.
-     */
-    public function authorize(User $user): bool
+    public function rules(Category $category): array
     {
-        return true;
-        //return $users->is_admin;
-        // TODO: uncomment
-    }
+        $cat = $this->route('category');
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
-    {
         return [
-            'title' => ['required', 'string', 'max:255', 'unique:categories'],
+            'title' => ['required', 'string', 'max:255', function ($attribute, $value, $fail) use ($cat) {
+                if (!is_null($cat) && $cat->title === $value) {
+                    return;
+                }
+
+                if (Category::where('title', $value)->exists()) {
+                    $fail("Category already exists.");
+                }
+            }],
         ];
     }
 }
