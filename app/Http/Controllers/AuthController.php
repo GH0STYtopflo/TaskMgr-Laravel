@@ -26,7 +26,7 @@ class AuthController extends Controller
         Auth::login($user);
 
 
-        return redirect('/');
+        return redirect()->route('users.dashboard', ['user' => $user]);
     }
 
     public function loginView()
@@ -37,10 +37,10 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
-            return redirect('/');
+            return redirect(route('users.dashboard', ['user' => Auth::user()]));
         }
 
-        return redirect('/login')->withErrors([
+        return redirect()->route('login')->withErrors([
             'credentials' => 'Invalid credentials have been provided.',
         ]);
     }
