@@ -3,7 +3,7 @@
 namespace App\Actions\Comments;
 
 use App\Actions\Action;
-use App\Http\Requests\QueryCommentsRequest;
+use App\Http\Requests\Comments\QueryCommentsRequest;
 use App\Models\Comment;
 use Illuminate\Support\Collection;
 

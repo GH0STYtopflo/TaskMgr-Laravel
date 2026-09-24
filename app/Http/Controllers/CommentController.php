@@ -6,7 +6,7 @@ use App\Actions\Comments\CreateTaskCommentAction;
 use App\Actions\Comments\DeleteTaskCommentAction;
 use App\Actions\Comments\QueryCommentsAction;
 use App\Actions\Comments\UpdateTaskCommentAction;
-use App\Http\Requests\QueryCommentsRequest;
+use App\Http\Requests\Comments\QueryCommentsRequest;
 use App\Models\Comment;
 use App\Models\Task;
 use Gate;

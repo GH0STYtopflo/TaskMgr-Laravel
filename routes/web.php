@@ -27,6 +27,18 @@ Route::middleware(['auth'])->group(function () {
     // User show
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 
+    // User delete
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+    //TODO: authorization for these two
+    Route::get('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminShow']);
+    Route::patch('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminUpdate']);
+
+    // Task Comments
+    Route::post('/tasks/{task}/comments', [CommentController::class, 'storeTaskComment'])->name('tasks.comments.store');
+    Route::patch('/tasks/{task}/comments/{comment}', [CommentController::class, 'updateTaskComment'])->name('tasks.comments.update');
+    Route::delete('/tasks/{task}/comments/{comment}', [CommentController::class, 'destroyTaskComment'])->name('tasks.comments.destroy');
+
     Route::middleware('can:admin-access')->group(function () {
         // Category
         Route::resource('categories', CategoryController::class)->except(['edit', 'create']);
@@ -38,15 +50,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
 
         // Users
-        Route::resource('users', UserController::class)->except(['edit', 'create', 'store', 'show']);
+        Route::resource('users', UserController::class)->only(['index']);
     });
-
-    //TODO: authorization for these two
-    Route::get('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminShow']);
-    Route::patch('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminUpdate']);
-
-    // Task Comments
-    Route::post('/tasks/{task}/comments', [CommentController::class, 'storeTaskComment'])->name('tasks.comments.store');
-    Route::patch('/tasks/{task}/comments/{comment}', [CommentController::class, 'updateTaskComment'])->name('tasks.comments.update');
-    Route::delete('/tasks/{task}/comments/{comment}', [CommentController::class, 'destroyTaskComment'])->name('tasks.comments.destroy');
 });

@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateTaskRequest;
-use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Requests\Tasks\CreateTaskRequest;
+use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Subtask;
 use App\Models\Task;
 use App\Models\User;
-use Auth;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
