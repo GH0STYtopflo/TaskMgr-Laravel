@@ -4,9 +4,9 @@
 @endphp
 
 <a
-    @if (!$expired)
+    @if (!$expired && !Auth::user()->is_admin)
         href="{{ route('users.tasks.nonAdminShow', [Auth::user(), $task]) }}"
-    @else (Auth::user()->is_admin)
+    @elseif (Auth::user()->is_admin)
         href="{{ route('tasks.show', $task)}}"
     @endif
     class="{{ $expired && !Auth::user()->is_admin ? 'cursor-not-allowed' : 'cursor-pointer' }}"
