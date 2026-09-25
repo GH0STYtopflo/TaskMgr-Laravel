@@ -54,7 +54,13 @@ class UserController extends Controller
 
         LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Deleted user", User::class);
 
+        if ($user->is(Auth::user())) {
+            Auth::logout();
+        }
+
         $user->delete();
+
+        return redirect()->route('users.index');
     }
 
     public function dashboard(User $user, QueryTasksRequest $request)

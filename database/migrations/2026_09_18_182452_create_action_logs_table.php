@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('action_logs', function (Blueprint $table) {
             $table->integer('resource_id')->nullable();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->enum('resource_type', ['TASK', 'USER', 'CATEGORY', 'SUBTASK', 'COMMENT'])->nullable();
             $table->enum('action_status', ['SUCCESS', 'FAILURE', 'NA'])->default('NA');
             $table->timestampTz('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

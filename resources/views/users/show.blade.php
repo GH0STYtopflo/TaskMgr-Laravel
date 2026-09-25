@@ -46,33 +46,47 @@
                        class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
             </form>
 
-            <hr class="mt-5">
+            @can('admin-access')
 
-            <div class="mt-5 mb-5">
-                <label class="text-white font-bold mb-5">Tasks</label>
-                @if(count($user->tasks) > 0)
-                    <div class="grid grid-cols-2 space-x-2 gap-2">
-                        @foreach($user->tasks as $task)
-                            <a href="{{"/tasks/$task->id"}}" class="mt-5 bg-blue-900 rounded flex justify-between p-4 w-full">
-                                <div>
-                                    <div>
-                                        <label class="text-white font-bold">Task:</label>
-                                        <label class="text-white">{{$task->title}}</label>
-                                    </div>
+                <hr class="mt-5">
 
+                <div class="mt-5 mb-5">
+                    <label class="text-white font-bold mb-5">Tasks</label>
+                    @if(count($user->tasks) > 0)
+                        <div class="grid grid-cols-2 space-x-2 gap-2">
+                            @foreach($user->tasks as $task)
+                                <a href="{{"/tasks/$task->id"}}" class="mt-5 bg-blue-900 rounded flex justify-between p-4 w-full">
                                     <div>
-                                        <label class="text-white font-bold">Task Id:</label>
-                                        <label class="text-white">{{$task->id}}</label>
+                                        <div>
+                                            <label class="text-white font-bold">Task:</label>
+                                            <label class="text-white">{{$task->title}}</label>
+                                        </div>
+
+                                        <div>
+                                            <label class="text-white font-bold">Task Id:</label>
+                                            <label class="text-white">{{$task->id}}</label>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                        @endforeach
-                    </div>
-                @else
-                    <p class="text-white">User is not currently assigned to any tasks</p>
-                @endif
-            </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-white">User is not currently assigned to any tasks</p>
+                    @endif
+                </div>
         </div>
+            @endcan
+
+        @can('vudd', $user)
+            <form action="{{ route('users.destroy', $user) }}" method="POST">
+                @csrf
+                @method('DELETE')
+
+                <input type="submit"
+                       value="Delete Account"
+                       class="bg-red-900 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
+            </form>
+        @endcan
 
     </div>
 
