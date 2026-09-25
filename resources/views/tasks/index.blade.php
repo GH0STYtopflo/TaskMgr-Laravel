@@ -4,7 +4,7 @@
 <x-layout title="Tasks">
     <div class="w-full flex flex-col mx-auto justify-between p-10 rounded-xl mt-10">
         @if(count($tasks) > 0)
-            <div class="grid grid-cols-5 gap-4">
+            <div class="grid grid-cols-4 gap-4">
                 @foreach($tasks as $task)
                     <x-task-card
                         :title="$task->title"

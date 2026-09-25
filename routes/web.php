@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\SubtaskController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -30,9 +31,9 @@ Route::middleware(['auth'])->group(function () {
     // User delete
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
-    //TODO: authorization for these two
-    Route::get('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminShow']);
-    Route::patch('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminUpdate']);
+    Route::get('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminShow'])->name('users.tasks.nonAdminShow');
+    Route::patch('/users/{user}/tasks/{task}', [TaskController::class, 'nonAdminUpdate'])->name('users.tasks.nonAdminUpdate');
+    Route::patch('/users/{user}/tasks/{task}/subtasks/{subtask}', [SubtaskController::class, 'updateSubtaskStatus'])->name('tasks.subtasks.status');
 
     // Task Comments
     Route::post('/tasks/{task}/comments', [CommentController::class, 'storeTaskComment'])->name('tasks.comments.store');
@@ -45,6 +46,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Task
         Route::resource('tasks', TaskController::class)->except(['edit']);
+        Route::patch('tasks/{task}/subtasks/{subtask}', [SubtaskController::class, 'updateTaskSubtask'])->name('tasks.subtasks.update');
+        Route::delete('/tasks/{task}/subtasks/{subtask}', [SubtaskController::class, 'destroyTaskSubtask'])->name('tasks.subtasks.destroy');
 
         //Comments
         Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');

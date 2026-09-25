@@ -7,7 +7,7 @@
         <label class="text-3xl text-white mx-auto font-bold mb-5">Your tasks</label>
 
         @if(count($tasks) > 0)
-            <div class="grid grid-cols-5 gap-4">
+            <div class="grid grid-cols-4 gap-4">
                 @foreach($tasks as $task)
                     <x-task-card
                         :title="$task->title"

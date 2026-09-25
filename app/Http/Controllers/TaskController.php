@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Tasks\CreateTaskAction;
+use App\Actions\Tasks\UpdateTaskAction;
 use App\Http\Requests\Tasks\CreateTaskRequest;
 use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Models\Category;
@@ -9,23 +11,19 @@ use App\Models\Comment;
 use App\Models\Subtask;
 use App\Models\Task;
 use App\Models\User;
+use Gate;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
+        // TODO: query tasks
         $tasks = Task::all();
 
         return view('tasks.index', ['tasks' => $tasks]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $users = User::all();
@@ -34,57 +32,14 @@ class TaskController extends Controller
         return view('tasks.create', ['users' => $users, 'categories' => $categories]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(CreateTaskRequest $request)
     {
-        // extract subtask titles into an array
-        $subtasks = self::extractSubtasks($request->subtasks);
+        // redirect back if necessary
+        $back = back();
 
-        //verify that the titles do not contain repeated values
-        if (($rep = self::isRepeated($subtasks)) !== null) {
-            return redirect()->back()->withErrors(['subtasks' => "Subtask $rep has been submitted multiple times."]);
-        }
-
-        $task = Task::create(
-            $request->except('subtasks', '_token', 'users', 'categories') + ['status' => $request->users > 0 ? 'ONGOING' : 'SUBMITTED']
-        );
-
-        $task->subtasks()->createMany(array_map(fn ($subtask) => ['title' => $subtask], $subtasks));
-        $task->categories()->attach($request->categories);
-        $task->users()->attach($request->users);
-
-        return redirect('/tasks');
+        return CreateTaskAction::do($request, $back);
     }
 
-    private static function extractSubtasks(?string $subs): array
-    {
-        if (is_null($subs)) {
-            return [];
-        }
-
-        $subs = explode("\r\n", $subs);
-
-        return array_map(fn($item) => trim($item), $subs);
-    }
-
-    private static function isRepeated(array $titles): ?string
-    {
-        for ($i = 0; $i < count($titles) - 1; $i++) {
-            for ($j = $i + 1; $j < count($titles); $j++) {
-                if ($titles[$i] === $titles[$j]) {
-                    return $titles[$i];
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Task $task)
     {
         $categories = Category::all();
@@ -100,81 +55,24 @@ class TaskController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        // extra validations
-        $subtasks = self::extractSubtasks($request->subtasks);
-        if (($rep = self::isRepeated($subtasks)) !== null) {
-            return redirect()->back()->withErrors(['subtasks' => "Subtask $rep has been submitted multiple times."]);
-        }
-
-        if (($rep = self::uniqueSubtasks($task, $subtasks)) !== null) {
-            return redirect()->back()->withErrors(['subtasks' => "Subtask $rep has been submitted multiple times."]);
-        }
-
-        if (isset($request->taskIsDone) && $task->subtasks()->where('is_completed', '0')->count() > 0) {
-            return redirect()->back()->withErrors(['finished' => "task has active subtasks."]);
-        }
-
-        $task->update([
-            'status' => $request->taskIsDone ? 'COMPLETED' : 'ONGOING',
-            'title' => $request->title,
-            'description' => $request->description,
-            'priority' => $request->priority,
-            'deadline' => $request->deadline,
-        ]);
-
-        $task->subtasks()->createMany(array_map(fn ($subtask) => ['title' => $subtask], $subtasks));
-
-        $existingSubs = $request->existingSubs ?? [];
-
-        foreach ($existingSubs as $i => $existingSub) {
-            Subtask::find($i)->update([
-                'title' => $existingSub,
-                'is_completed' => array_key_exists($i, $request->subIsdone) ? 1 : 0,
-            ]);
-        }
-
-        $task->users()->sync($request->users);
-        $task->categories()->sync($request->categories);
-
-        return redirect('/tasks/' . $task->id);
+        return UpdateTaskAction::do($request, $task, back());
     }
 
-    private static function uniqueSubtasks(Task $task, array $subtasks): ?string
-    {
-        foreach ($subtasks as $subtask) {
-            if ($task->subtasks->where('title', $subtask)->count() != 0) {
-                return $subtask;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Task $task)
     {
         $task->delete();
 
-        return redirect('/tasks');
+        return redirect()->route('tasks.index');
     }
 
     public function nonAdminUpdate($user, Task $task, Request $request)
     {
-        if (isset($request->taskIsDone) && $task->subtasks()->where('is_completed', '0')->count() > 0) {
-            return redirect()->back()->withErrors(['finished' => "task has active subtasks."]);
-        }
+        Gate::authorize('non-admin-update-and-show', $task);
 
-        foreach ($task->subtasks as $subtask) {
-            $subtask->update([
-                'is_completed' => array_key_exists($subtask->id, $request->subIsdone),
-            ]);
+        if (isset($request->taskIsDone) && $task->subtasks()->where('is_completed', '0')->exists()) {
+            return redirect()->back()->withErrors(['finished' => "task has active subtasks."]);
         }
 
         $task->update([
@@ -186,6 +84,8 @@ class TaskController extends Controller
 
     public function nonAdminShow($user, Task $task)
     {
+        Gate::authorize('non-admin-update-and-show', $task);
+
         $comments = $task->comments;
 
         return view('users.non_admin.tasks.show', [

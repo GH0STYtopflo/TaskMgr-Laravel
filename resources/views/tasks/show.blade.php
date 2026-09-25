@@ -77,26 +77,6 @@
             <textarea class="bg-white w-full p-2 rounded mb-5" placeholder="New Subtasks (separated by newlines)"
                       name="subtasks" rows="5"></textarea>
 
-            <label class="text-white font-bold"> Subtasks </label>
-            @foreach($task->subtasks as $subtask)
-
-                <div class="w-full flex justify-between items-center mb-5">
-                    <input type="text" name="existingSubs[{{$subtask->id}}]" placeholder="subtask"
-                           class="bg-white p-2 rounded w-full"
-                           required
-                           value="{{$subtask->title}}"
-                    >
-
-                    <div class="flex justify-center space-x-4 w-1/3">
-                        <label class="text-white">Completed</label>
-                        <input type="checkbox" class="scale-150" name="subIsdone[{{$subtask->id}}]" @if($subtask->is_completed) checked @endif>
-                    </div>
-                </div>
-            @endforeach
-            @error('subtasks')
-            <x-error :message="$message"></x-error>
-            @enderror
-
             <div class="flex justify-center space-x-4 w-full">
                 <label class="text-white">Set Finished</label>
                 <input type="checkbox" class="scale-150" name="taskIsDone" @if($task->status == 'COMPLETED') checked @endif>
@@ -108,6 +88,9 @@
             <input type="submit"
                    value="Edit"
                    class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
+            @error('update')
+                <x-error :message="$message"></x-error>
+            @enderror
         </form>
 
         <form action="/tasks/{{$task->id}}" method="POST">
@@ -118,6 +101,43 @@
                    value="Delete"
                    class="bg-red-900 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
         </form>
+
+        <label class="text-white font-bold mt-15"> Subtasks </label>
+        @foreach($task->subtasks as $subtask)
+            <div class="flex justify-between items-center space-x-1">
+                <form action="{{ route('tasks.subtasks.update', [$task, $subtask]) }}" method="post" class="w-full flex justify-between items-center mb-5">
+                    @csrf
+                    @method('PATCH')
+
+                    <input type="text" name="title" placeholder="subtask"
+                           class="bg-white p-2 rounded w-full"
+                           required
+                           value="{{$subtask->title}}"
+                    >
+
+                    <div class="flex justify-center space-x-4 w-1/3">
+                        <label class="text-white">Completed</label>
+                        <input type="checkbox" class="scale-150" name="is_done" @if($subtask->is_completed) checked @endif>
+                    </div>
+
+                    <button type="submit" class="bg-pink-500 p-2 cursor-pointer transition duration-200 hover:scale-105 rounded font-bold">
+                        Update
+                    </button>
+                </form>
+
+                <form action="{{ route('tasks.subtasks.destroy', [$task, $subtask]) }}" method="post">
+                    @csrf
+                    @method('DELETE')
+
+                    <button type="submit" class="bg-red-900 p-2 cursor-pointer transition duration-200 hover:scale-105 rounded font-bold mb-5">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        @endforeach
+        @error('subtasks')
+        <x-error :message="$message"></x-error>
+        @enderror
     </div>
 
     <div class="w-1/2 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10 mb-5"

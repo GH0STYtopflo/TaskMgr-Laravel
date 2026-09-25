@@ -77,6 +77,9 @@
             <input type="submit"
                    value="Create"
                    class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
+            @error('task')
+                <x-error :message="$message"></x-error>
+            @enderror
         </form>
     </div>
 </x-layout>

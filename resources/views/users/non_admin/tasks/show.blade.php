@@ -57,29 +57,6 @@
                 <label class="w-full text-white">{{(new DateTimeImmutable($task->deadline))->format('Y-m-d H:i:s')}}</label>
             </div>
 
-
-            <label class="text-white font-bold"> Subtasks </label>
-            @if(count($task->subtasks) > 0)
-                @foreach($task->subtasks as $subtask)
-
-                    <div class="w-full flex justify-between items-center mb-5">
-                        <label class="text-white">
-                            {{$subtask->title}}
-                        </label>
-
-                        <div class="flex justify-center space-x-4 w-1/3">
-                            <label class="text-white">Completed</label>
-                            <input type="checkbox" class="scale-150" name="subIsdone[{{$subtask->id}}]" @if($subtask->is_completed) checked @endif>
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <p class="text-white">No subtasks for this task</p>
-            @endif
-            @error('subtasks')
-            <x-error :message="$message"></x-error>
-            @enderror
-
             <div class="flex justify-center space-x-4 w-full">
                 <label class="text-white">Set Finished</label>
                 <input type="checkbox" class="scale-150" name="taskIsDone" @if($task->status == 'COMPLETED') checked @endif>
@@ -92,6 +69,30 @@
                    value="Submit changes"
                    class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
         </form>
+
+        <label class="text-white font-bold mt-15"> Subtasks </label>
+        @foreach($task->subtasks as $subtask)
+            <div class="flex justify-between items-center space-x-1">
+                <form action="{{ route('tasks.subtasks.status', [Auth::user(), $task, $subtask]) }}" method="post" class="w-full flex justify-between items-center mb-5">
+                    @csrf
+                    @method('PATCH')
+
+                    <label class="text-white w-full">{{$subtask->title}}</label>
+
+                    <div class="flex justify-center space-x-4 w-1/3">
+                        <label class="text-white">Completed</label>
+                        <input type="checkbox" class="scale-150" name="is_done" @if($subtask->is_completed) checked @endif>
+                    </div>
+
+                    <button type="submit" class="bg-pink-500 p-2 cursor-pointer transition duration-200 hover:scale-105 rounded font-bold">
+                        Update
+                    </button>
+                </form>
+            </div>
+        @endforeach
+        @error('subtasks')
+        <x-error :message="$message"></x-error>
+        @enderror
     </div>
 
     <div class="w-1/2 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10"
