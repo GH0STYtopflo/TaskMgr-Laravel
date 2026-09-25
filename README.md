@@ -74,4 +74,24 @@ A default administrator account is automatically created on first run:
 
 ## Project Structure
 
-The application follows standard Laravel conventions with Blade templates for views, Eloquent models for database access, and middleware for request handling.
+```
+.
+├── app
+├── artisan
+├── bootstrap
+├── composer.json
+├── composer.lock
+├── config
+├── database
+├── docker-compose.yml
+├── Dockerfile
+├── package.json
+├── package-lock.json
+├── phpunit.xml
+├── public
+├── README.md
+├── resources
+├── routes
+├── storage
+└── vite.config.js
+```
