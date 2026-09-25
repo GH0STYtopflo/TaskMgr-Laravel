@@ -49,7 +49,7 @@ class TaskController extends Controller
     {
         $categories = Category::all();
         $users = User::all();
-        $comments = Comment::all();
+        $comments = $task->comments;
 
         LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Viewed task", Task::class, $task);
 

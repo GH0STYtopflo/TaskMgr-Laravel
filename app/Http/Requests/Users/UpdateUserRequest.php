@@ -13,20 +13,19 @@ class UpdateUserRequest extends FormRequest
 {
     public function rules(): array
     {
-        $user = $this->user();
-        $req = $this;
+        $user = $this->route('user');
 
         return [
             'username' => ['required', 'string', 'max:255', function ($attribute, $value, $fail) use ($user) {
                 if (User::where('username', $value)
-                    ->where('id', '!=', $user->id)
+                    ->whereNot('users.id', $user->id)
                     ->exists()) {
                     $fail('Username already exists.');
                 }
             }],
             'email' => ['nullable', 'string', 'email', 'max:255', function ($attribute, $value, $fail) use ($user) {
                 if (User::where('email', $value)
-                    ->where('id', '!=', $user->id)
+                    ->whereNot('id', $user->id)
                     ->exists()) {
                     $fail('Email taken.');
                 }

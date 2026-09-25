@@ -37,7 +37,7 @@ class UpdateTaskAction
         }
 
         // task can't be declared as finished if it still has active subtasks
-        if (!is_null($request->taskIsDone) && $task->subtasks()->where('is_completed', '0')->exists()) {
+        if (!is_null($request->task_is_done) && $task->subtasks()->where('is_completed', '0')->exists()) {
             LogAction::do(Auth::user(), ActionStatus::FAILURE,
                 "Failed to update task. Reason: Task has unfinished subtasks.",
                 $task, $request->except('_token'));
@@ -48,7 +48,7 @@ class UpdateTaskAction
         try {
             DB::transaction(function () use ($task, $request, $new_subtasks) {
                 $task->update([
-                    'status' => is_null($request->taskIsDone) ? $task->status : ($request->taskIsDone ? 'COMPLETED' : 'ONGOING'),
+                    'status' => $request->task_is_done ? 'COMPLETED' : 'ONGOING',
                     'title' => $request->title ?? $task->title,
                     'description' => $request->description ?? $task->description,
                     'priority' => $request->priority ?? $task->priority,

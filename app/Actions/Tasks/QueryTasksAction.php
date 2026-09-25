@@ -39,7 +39,7 @@ class QueryTasksAction
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', $request->status);
             })
-            ->orderByDesc($request->order_by)
+            ->orderByDesc($request->order_by ?? 'created_at')
             ->get();
     }
 }

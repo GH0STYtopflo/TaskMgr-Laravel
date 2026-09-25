@@ -19,7 +19,7 @@
             <input type="text" name="title" placeholder="title"
                    class="bg-white p-2 rounded mb-5 w-full"
                    required
-                   value={{$task->title}}
+                   value="{{$task->title}}"
             >
             @error('title')
             <x-error :message="$message"></x-error>
@@ -69,7 +69,7 @@
             </div>
 
             <input type="datetime-local" name="deadline" class="w-full bg-white p-2 mb-5 rounded" required
-                   value={{$task->deadline}}>
+                   value="{{ (new DateTimeImmutable($task->deadline))->format('Y-m-d\TH:i:s') }}"
             @error('deadline')
             <x-error :message="$message"></x-error>
             @enderror
@@ -79,7 +79,7 @@
 
             <div class="flex justify-center space-x-4 w-full">
                 <label class="text-white">Set Finished</label>
-                <input type="checkbox" class="scale-150" name="taskIsDone" @if($task->status == 'COMPLETED') checked @endif>
+                <input type="checkbox" class="scale-150" name="task_is_done" @if($task->status == 'COMPLETED') checked @endif>
             </div>
             @error('finished')
             <x-error :message="$message"></x-error>

@@ -16,12 +16,16 @@ return new class extends Migration
             $table->string('title', 255)->index();
             $table->string('description')->nullable();
             $table->integer('priority', unsigned: true)->index();
-            $table->timestampTz('deadline')->default('now()')->index();
+            $table->timestampTz('deadline')->default(DB::raw('CURRENT_TIMESTAMP'))->index();
             $table->enum('status', ['ONGOING', 'COMPLETED'])->index();
             $table->timestamps();
         });
 
-        // TODO: ADD check constraint on priority since sqlite doesn't support altering the table after creation
+        DB::statement('
+            ALTER TABLE tasks
+            ADD CONSTRAINT tasks_priority_check
+            CHECK (priority BETWEEN 1 AND 20)
+        ');
     }
 
     /**

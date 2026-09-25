@@ -12,7 +12,7 @@ class QueryUsersAction
     {
         return User::query()
             ->when($request->username, function ($query, $username) {
-                return $query->whereUsername($username);
+                $query->where('username', 'ILIKE' , "%$username%");
             })->when($request->id, function ($query, $id) {
                 $query->where('id', '=', $id);
             })->when($request->before, function ($query, $before) {
