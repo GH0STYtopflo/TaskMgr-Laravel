@@ -28,6 +28,8 @@ Route::middleware(['auth'])->group(function () {
     // User show
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 
+    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
+
     // User delete
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 

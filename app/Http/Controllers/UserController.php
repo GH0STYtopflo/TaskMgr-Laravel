@@ -6,6 +6,7 @@ use App\Actions\Users\QueryUsersAction;
 use App\Actions\Users\UpdateUserAction;
 use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Http\Requests\Users\QueryUsersRequest;
+use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
 use Gate;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class UserController extends Controller
         return view('users.show', ['user' => $user]);
     }
 
-    public function update(User $user, UpdateTaskRequest $request)
+    public function update(User $user, UpdateUserRequest $request)
     {
         Gate::authorize('vudd', $user);
 

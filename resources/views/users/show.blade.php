@@ -9,7 +9,7 @@
                 </h2>
             </div>
 
-            <form action="{{"/users/$user->id"}}" method="POST">
+            <form action="{{ route('users.update', $user) }}" method="POST">
                 @csrf
                 @method('PATCH')
 
@@ -21,16 +21,25 @@
                     <div>
                         <input type="text" name="username" class="bg-white rounded p-2 w-full" required placeholder="username" value="{{$user->username}}">
                     </div>
+                    @error('username')
+                        <x-error :message="$message"></x-error>
+                    @enderror
 
                     <div>
                         <input type="text" name="email" class="bg-white rounded p-2 w-full" required  placeholder="email" value="{{$user->email}}">
                     </div>
+                    @error('email')
+                    <x-error :message="$message"></x-error>
+                    @enderror
                 </div>
 
                 <div class="mt-5">
                     <label class="text-white font-bold">New Password</label>
                     <input type="password" name="new_password" class="bg-white rounded p-2 w-full mt-3" placeholder="new password">
                 </div>
+                @error('new_password')
+                <x-error :message="$message"></x-error>
+                @enderror
 
                 <input type="submit"
                        value="Update"
