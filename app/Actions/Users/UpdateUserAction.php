@@ -16,7 +16,7 @@ class UpdateUserAction
 
         $user->username = $request->username ?? $user->username;
 
-        $user->password = $request->password ?? $user->password;
+        $user->password = $request->new_password ?? $user->password;
 
         $user->save();
 
