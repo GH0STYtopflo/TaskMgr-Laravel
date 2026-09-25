@@ -4,7 +4,6 @@ namespace App\Http\Requests\Tasks;
 
 use App\Actions\Log\LogAction;
 use App\Enums\ActionStatus;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 

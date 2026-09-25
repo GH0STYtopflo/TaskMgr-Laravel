@@ -5,7 +5,6 @@ namespace App\Http\Requests\Comments;
 use App\Actions\Log\LogAction;
 use App\Enums\ActionStatus;
 use App\Models\Comment;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;

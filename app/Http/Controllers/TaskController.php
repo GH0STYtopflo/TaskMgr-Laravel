@@ -12,7 +12,6 @@ use App\Http\Requests\Tasks\QueryTasksRequest;
 use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Http\Requests\Tasks\UpdateTaskStatusRequest;
 use App\Models\Category;
-use App\Models\Comment;
 use App\Models\Task;
 use App\Models\User;
 use Auth;

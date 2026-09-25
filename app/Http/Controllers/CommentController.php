@@ -14,7 +14,6 @@ use App\Http\Requests\Comments\QueryCommentsRequest;
 use App\Models\Comment;
 use App\Models\Task;
 use Gate;
-use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {

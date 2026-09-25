@@ -6,7 +6,6 @@ use App\Actions\Log\LogAction;
 use App\Enums\ActionStatus;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class UpdateUserAction
 {
