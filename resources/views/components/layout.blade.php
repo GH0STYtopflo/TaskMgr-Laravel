@@ -18,7 +18,7 @@
         class="mt-3 w-1/2 mx-auto h-13 flex items-center justify-between rounded-md pr-5 pl-5 space-x-1">
 
     <div>
-        <a href="/">
+        <a href="{{ Auth::guest() ? '/' : route('users.dashboard', Auth::user()) }}">
             <button class="font-sarif font-extrabold text-2xl cursor-pointer">
                 {{$title}}
             </button>
@@ -27,13 +27,13 @@
 
     <div>
         @guest()
-            <a href="/signup">
+            <a href="/signup{{ route('signup') }}">
                 <button
                     class="font-bold bg-pink-950 p-2 pl-3 pr-3 rounded-2xl text-amber-50 transition duration-200 hover:scale-105 cursor-pointer">
                     Signup
                 </button>
             </a>
-            <a href="/login">
+            <a href="{{ route('login') }}">
                 <button
                     class="font-bold bg-emerald-950 p-2 pl-3 pr-3 rounded-2xl text-amber-50 transition duration-200 hover:scale-105 cursor-pointer">
                     Login
@@ -42,7 +42,7 @@
         @endguest
 
         @auth
-            <form action="/logout" method="POST">
+            <form action="{{ route('logout') }}" method="POST">
                 @method('DELETE')
                 <button
                     class="font-bold bg-red-900 p-2 pl-3 pr-3 rounded-2xl text-amber-50 transition duration-200 hover:scale-105 cursor-pointer">

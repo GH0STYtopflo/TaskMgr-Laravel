@@ -63,7 +63,7 @@
                 </div>
             </div>
 
-            <input type="datetime-local" name="deadline" class="w-full bg-white p-2 mb-5 rounded" required>
+            <input type="datetime-local" name="deadline" class="w-full bg-white p-2 mb-5 rounded" min="{{ now()->format('Y-m-d\TH:i')}}" required>
             @error('deadline')
             <x-error :message="$message"></x-error>
             @enderror

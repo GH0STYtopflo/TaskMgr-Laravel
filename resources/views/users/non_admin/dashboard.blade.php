@@ -10,12 +10,7 @@
             <div class="grid grid-cols-4 gap-4">
                 @foreach($tasks as $task)
                     <x-task-card
-                        :title="$task->title"
-                        :id="$task->id"
-                        :description="$task->description"
-                        :status="$task->status"
-                        :date="(new DateTimeImmutable($task->deadline))->format('Y-m-d H:i:s')"
-                        non-admin="1"
+                        :task="$task"
                     />
                 @endforeach
             </div>
