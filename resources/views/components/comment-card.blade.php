@@ -3,7 +3,9 @@
         <label class="text-white font-bold">{{$comment->user->username}}</label>
         <div>
             <label class="text-white font-bold">Time: </label>
-            <label class="text-white">{{(new DateTimeImmutable($comment->created_at))->format('Y-m-d H:i:s')}}</label>
+            <label class="text-white">
+                {{ (new DateTimeImmutable($comment->created_at))->setTimezone(new DateTimeZone('Asia/Tehran'))->format('Y-m-d H:i:s') }}
+            </label>
         </div>
     </div>
     <hr class="mt-3">

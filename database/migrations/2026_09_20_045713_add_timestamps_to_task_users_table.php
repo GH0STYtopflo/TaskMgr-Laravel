@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('task_users', function (Blueprint $table) {
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('task_users', function (Blueprint $table) {
-            $table->dropTimestamps();
+            $table->dropTimestampsTz();
         });
     }
 };

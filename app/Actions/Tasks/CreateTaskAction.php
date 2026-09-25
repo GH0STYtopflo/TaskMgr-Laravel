@@ -32,7 +32,7 @@ class CreateTaskAction
         try {
             DB::transaction(function () use ($request, $subtasks, &$task) {
                 $task = Task::create(
-                    $request->except('subtasks', '_token', 'users', 'categories') + ['status' => $request->users > 0 ? 'ONGOING' : 'SUBMITTED']
+                    $request->except('subtasks', '_token', 'users', 'categories') + ['status' => 'ONGOING']
                 );
 
                 $task->subtasks()->createMany(array_map(fn($subtask) => ['title' => $subtask], $subtasks));

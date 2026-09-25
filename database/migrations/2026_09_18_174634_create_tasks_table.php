@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('priority', unsigned: true)->index();
             $table->timestampTz('deadline')->default(DB::raw('CURRENT_TIMESTAMP'))->index();
             $table->enum('status', ['ONGOING', 'COMPLETED'])->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
 
         DB::statement('
