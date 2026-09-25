@@ -6,7 +6,6 @@ use App\Actions\Tasks\QueryTasksAction;
 use App\Actions\Users\QueryUsersAction;
 use App\Actions\Users\UpdateUserAction;
 use App\Http\Requests\Tasks\QueryTasksRequest;
-use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Http\Requests\Users\QueryUsersRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;

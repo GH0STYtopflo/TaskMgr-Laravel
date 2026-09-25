@@ -2,7 +2,6 @@
 
 namespace App\Actions\Users;
 
-use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
 

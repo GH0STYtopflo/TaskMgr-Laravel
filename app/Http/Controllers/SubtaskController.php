@@ -7,8 +7,6 @@ use App\Http\Requests\Subtasks\UpdateSubtaskRequest;
 use App\Http\Requests\Subtasks\UpdateSubtaskStatusRequest;
 use App\Models\Subtask;
 use App\Models\Task;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class SubtaskController extends Controller

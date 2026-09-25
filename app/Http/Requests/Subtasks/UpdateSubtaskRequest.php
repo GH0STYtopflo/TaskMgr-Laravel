@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Subtasks;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSubtaskRequest extends FormRequest

@@ -3,7 +3,6 @@
 namespace App\Actions\Comments;
 
 use App\Models\Task;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CreateTaskCommentAction

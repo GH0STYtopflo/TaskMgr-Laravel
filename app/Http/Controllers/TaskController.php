@@ -10,7 +10,6 @@ use App\Http\Requests\Tasks\QueryTasksRequest;
 use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Models\Category;
 use App\Models\Comment;
-use App\Models\Subtask;
 use App\Models\Task;
 use App\Models\User;
 use Gate;

@@ -6,6 +6,7 @@ use App\Http\Requests\Tasks\CreateTaskRequest;
 use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class CreateTaskAction
 {
@@ -29,7 +30,7 @@ class CreateTaskAction
                 $task->categories()->attach($request->categories);
                 $task->users()->attach($request->users);
             });
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return $back->withErrors(['task' => 'There was an error submitting your task.']);
         }
 

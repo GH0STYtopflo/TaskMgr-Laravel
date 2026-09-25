@@ -6,6 +6,7 @@ use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class UpdateTaskAction
 {
@@ -44,7 +45,7 @@ class UpdateTaskAction
                 $task->users()->sync($request->users);
                 $task->categories()->sync($request->categories);
             });
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return $back->withErrors(['update' => "There was an error updating the task."]);
         }
 

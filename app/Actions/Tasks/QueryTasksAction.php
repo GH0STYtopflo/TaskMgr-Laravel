@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use LaravelIdea\Helper\App\Models\_IH_Task_QB;
 
 class QueryTasksAction
 {
