@@ -2,9 +2,12 @@
 
 namespace App\Actions\Tasks;
 
+use App\Actions\Log\LogAction;
+use App\Enums\ActionStatus;
 use App\Http\Requests\Tasks\CreateTaskRequest;
 use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -17,11 +20,17 @@ class CreateTaskAction
 
         // verify that the titles do not contain repeated values
         if (($rep = self::isRepeated($subtasks)) !== null) {
+            LogAction::do(Auth::user(), ActionStatus::FAILURE,
+                "Failed to create task. Reason: Subtask $rep has been submitted multiple times.",
+                Task::class, $request->except('_token'));
+
             return $back->withErrors(['subtasks' => "Subtask $rep has been submitted multiple times."]);
         }
 
+        $task = null;
+
         try {
-            DB::transaction(function () use ($request, $subtasks) {
+            DB::transaction(function () use ($request, $subtasks, &$task) {
                 $task = Task::create(
                     $request->except('subtasks', '_token', 'users', 'categories') + ['status' => $request->users > 0 ? 'ONGOING' : 'SUBMITTED']
                 );
@@ -30,9 +39,14 @@ class CreateTaskAction
                 $task->categories()->attach($request->categories);
                 $task->users()->attach($request->users);
             });
-        } catch (Throwable) {
+        } catch (Throwable $throwable) {
+            LogAction::do(Auth::user(), ActionStatus::FAILURE, "Failed to create task. Reason: " . $throwable->getMessage(),
+            Task::class, $request->except('_token'));
+
             return $back->withErrors(['task' => 'There was an error submitting your task.']);
         }
+
+        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Created task.", $task, $request->except('_token'));
 
         return redirect()->route('tasks.index');
     }

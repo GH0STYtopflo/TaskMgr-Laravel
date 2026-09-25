@@ -2,8 +2,11 @@
 
 namespace App\Actions\Users;
 
+use App\Actions\Log\LogAction;
+use App\Enums\ActionStatus;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateUserAction
 {
@@ -16,5 +19,7 @@ class UpdateUserAction
         $user->password = $request->password ?? $user->password;
 
         $user->save();
+
+        LogAction::do($user, ActionStatus::SUCCESS, "Updated user", $user, $request->except('_token'));
     }
 }

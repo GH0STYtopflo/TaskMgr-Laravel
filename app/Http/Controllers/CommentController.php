@@ -6,6 +6,10 @@ use App\Actions\Comments\CreateTaskCommentAction;
 use App\Actions\Comments\DeleteTaskCommentAction;
 use App\Actions\Comments\QueryCommentsAction;
 use App\Actions\Comments\UpdateTaskCommentAction;
+use App\Actions\Log\LogAction;
+use App\Enums\ActionStatus;
+use App\Http\Requests\Comments\CreateOrUpdateTaskCommentRequest;
+use App\Http\Requests\Comments\CreateTaskCommentRequest;
 use App\Http\Requests\Comments\QueryCommentsRequest;
 use App\Models\Comment;
 use App\Models\Task;
@@ -18,10 +22,12 @@ class CommentController extends Controller
     {
         $comments = QueryCommentsAction::do($request);
 
+        LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Queried comments.", Comment::class, $request->except('_token'));
+
         return view('comments.index', ['comments' => $comments]);
     }
 
-    public function storeTaskComment(Task $task ,Request $request)
+    public function storeTaskComment(Task $task, CreateOrUpdateTaskCommentRequest $request)
     {
         Gate::authorize('create', [Comment::class, $task]);
 
@@ -30,7 +36,7 @@ class CommentController extends Controller
         return back();
     }
 
-    public function updateTaskComment(Task $task, Comment $comment, Request $request)
+    public function updateTaskComment(Task $task, Comment $comment, CreateOrUpdateTaskCommentRequest $request)
     {
         Gate::authorize('updateOrDestroy', [$comment, $task]);
 

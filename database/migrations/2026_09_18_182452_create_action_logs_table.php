@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->enum('resource_type', ['TASK', 'USER', 'CATEGORY', 'SUBTASK', 'COMMENT'])->nullable();
             $table->enum('action_status', ['SUCCESS', 'FAILURE', 'NA'])->default('NA');
-            $table->timestampTz('created_at')->default('now()');
+            $table->timestampTz('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
     }
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Log\LogAction;
 use App\Actions\Subtasks\UpdateSubtaskAction;
+use App\Enums\ActionStatus;
 use App\Http\Requests\Subtasks\UpdateSubtaskRequest;
 use App\Http\Requests\Subtasks\UpdateSubtaskStatusRequest;
 use App\Models\Subtask;
@@ -17,9 +19,14 @@ class SubtaskController extends Controller
         return UpdateSubtaskAction::do($task, $subtask, $request, back());
     }
 
-    public function destroyTaskSubtask($task, Subtask $subtask)
+    public function destroyTaskSubtask(Task $task, Subtask $subtask)
     {
         $subtask->delete();
+
+        LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Deleted subtask {$subtask->title} from {$task->title}",
+        Subtask::class);
+
+        LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Deleted subtask {$subtask->title}", $task);
 
         return back();
     }

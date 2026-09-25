@@ -59,7 +59,7 @@
 
             <div class="flex justify-center space-x-4 w-full">
                 <label class="text-white">Set Finished</label>
-                <input type="checkbox" class="scale-150" name="taskIsDone" @if($task->status == 'COMPLETED') checked @endif>
+                <input type="checkbox" class="scale-150" name="task_is_done" @if($task->status == 'COMPLETED') checked @endif>
             </div>
             @error('finished')
             <x-error :message="$message"></x-error>

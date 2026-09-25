@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests\Categories;
 
+use App\Actions\Log\LogAction;
+use App\Enums\ActionStatus;
 use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
+use Validator;
 
 /**
  * Used for both creating and updating categories
@@ -25,5 +28,14 @@ class CreateCategoryRequest extends FormRequest
                 }
             }],
         ];
+    }
+
+    protected function failedValidation(Validator|\Illuminate\Contracts\Validation\Validator $validator): void
+    {
+        LogAction::do(\Auth::user(), ActionStatus::FAILURE,
+            "Failed to create or update category. Reason: {$validator->errors()->first()}",
+        Category::class, $this->except('_token'));
+
+        parent::failedValidation($validator);
     }
 }

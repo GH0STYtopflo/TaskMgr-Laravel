@@ -2,8 +2,12 @@
 
 namespace App\Http\Requests\Users;
 
+use App\Actions\Log\LogAction;
+use App\Enums\ActionStatus;
 use App\Models\User;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -29,5 +33,13 @@ class UpdateUserRequest extends FormRequest
             }],
             'new_password' => ['nullable','string', 'min:8'],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        LogAction::do(Auth::user(), ActionStatus::FAILURE, "Failed to update user. Reason: {$validator->errors()->first()}",
+        $this->user(), $this->except('_token'));
+
+        parent::failedValidation($validator);
     }
 }

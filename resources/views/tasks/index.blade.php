@@ -75,6 +75,16 @@
         </form>
     </div>
 
+    <div class="flex justify-center mt-8">
+        <a
+            href="{{ route('tasks.create') }}"
+            class="bg-pink-500 font-bold px-6 py-3 rounded-xl
+               cursor-pointer transition duration-200 hover:scale-105"
+        >
+            Create New Task
+        </a>
+    </div>
+
     @if(count($tasks) > 0)
         <div class="grid grid-cols-4 gap-4 mt-10 p-2">
             @foreach($tasks as $task)

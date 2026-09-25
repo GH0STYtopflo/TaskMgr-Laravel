@@ -27,7 +27,7 @@
 
     <div>
         @guest()
-            <a href="/signup{{ route('signup') }}">
+            <a href="{{ route('signup') }}">
                 <button
                     class="font-bold bg-pink-950 p-2 pl-3 pr-3 rounded-2xl text-amber-50 transition duration-200 hover:scale-105 cursor-pointer">
                     Signup

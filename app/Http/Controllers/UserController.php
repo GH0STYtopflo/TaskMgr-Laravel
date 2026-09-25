@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Log\LogAction;
 use App\Actions\Tasks\QueryTasksAction;
 use App\Actions\Users\QueryUsersAction;
 use App\Actions\Users\UpdateUserAction;
+use App\Enums\ActionStatus;
 use App\Http\Requests\Tasks\QueryTasksRequest;
 use App\Http\Requests\Users\QueryUsersRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
@@ -18,12 +20,16 @@ class UserController extends Controller
     {
         $users = QueryUsersAction::do($request);
 
+        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Indexed users", User::class, $request->except('_token'));
+
         return view('users.index', ['users' => $users]);
     }
 
     public function show(User $user)
     {
         Gate::authorize('vudd', $user);
+
+        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Viewed user", $user);
 
         return view('users.show', ['user' => $user]);
     }
@@ -46,12 +52,16 @@ class UserController extends Controller
     {
         Gate::authorize('vudd', $user);
 
+        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Deleted user", User::class);
+
         $user->delete();
     }
 
     public function dashboard(User $user, QueryTasksRequest $request)
     {
         Gate::authorize('vudd', $user);
+
+        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Viewed user dashboard", $user, $request->except('_token'));
 
         if ($user->is_admin) {
             return view('users.admin.dashboard');
