@@ -49,11 +49,11 @@ class UserController extends Controller
 
     public function dashboard(User $user)
     {
+        Gate::authorize('vudd', $user);
+
         if ($user->is_admin) {
             return view('users.admin.dashboard');
         } else {
-            Gate::authorize('vudd', $user);
-
             return view('users.non_admin.dashboard', ['tasks' => $user->tasks]);
         }
     }
