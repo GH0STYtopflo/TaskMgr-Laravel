@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Actions\Log\LogAction;
 use App\Actions\Tasks\CreateTaskAction;
+use App\Actions\Tasks\DeleteTaskAction;
+use App\Actions\Tasks\NonAdminUpdateAction;
 use App\Actions\Tasks\QueryTasksAction;
 use App\Actions\Tasks\UpdateTaskAction;
 use App\Enums\ActionStatus;
@@ -22,8 +24,6 @@ class TaskController extends Controller
     public function index(QueryTasksRequest $request)
     {
         $tasks = QueryTasksAction::do($request);
-
-        LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Queried tasks", Task::class, $request->except('_token'));
 
         return view('tasks.index', ['tasks' => $tasks]);
     }
@@ -67,9 +67,7 @@ class TaskController extends Controller
 
     public function destroy(Task $task)
     {
-        $task->delete();
-
-        LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Deleted task", Task::class, $task);
+        DeleteTaskAction::do($task);
 
         return redirect()->route('tasks.index');
     }
@@ -78,19 +76,9 @@ class TaskController extends Controller
     {
         Gate::authorize('nonAdminUpdateAndShow', $task);
 
-        if (isset($request->task_is_done) && $task->subtasks()->where('is_completed', '0')->exists()) {
-            LogAction::do(\Auth::user(), ActionStatus::FAILURE, "Failed to update task status. Reason: Task has unfinished subtasks");
+        $back = back();
 
-            return redirect()->back()->withErrors(['finished' => "task has active subtasks."]);
-        }
-
-        LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Updated task status", $task, $request->except('_token'));
-
-        $task->update([
-            'status' => $request->task_is_done ? 'COMPLETED' : 'ONGOING',
-        ]);
-
-        return back();
+        return NonAdminUpdateAction::do($task, $request, $back);
     }
 
     public function nonAdminShow($user, Task $task)

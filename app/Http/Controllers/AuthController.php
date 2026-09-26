@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Auth\SignupAction;
 use App\Actions\Log\LogAction;
 use App\Enums\ActionStatus;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\SignupRequest;
-use App\Models\User;
 use Auth;
 
 class AuthController extends Controller
@@ -18,17 +18,7 @@ class AuthController extends Controller
 
     public function signup(SignupRequest $request)
     {
-        $user = User::make(
-            $request->except('_token', 'password')
-        );
-
-        $user->password = $request->password;
-        $user->save();
-
-        Auth::login($user);
-
-        LogAction::do($user, ActionStatus::SUCCESS, "User $user->id signed up.", $user,
-            $request->except('_token', 'password'));
+        $user = SignupAction::do($request);
 
         return redirect()->route('users.dashboard', ['user' => $user]);
     }

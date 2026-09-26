@@ -2,15 +2,18 @@
 
 namespace App\Actions\Users;
 
+use App\Actions\Log\LogAction;
+use App\Enums\ActionStatus;
 use App\Http\Requests\Users\QueryUsersRequest;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class QueryUsersAction
 {
     public static function do(QueryUsersRequest $request): Collection
     {
-        return User::query()
+        $users = User::query()
             ->when($request->username, function ($query, $username) {
                 $query->where('username', 'ILIKE' , "%$username%");
             })->when($request->id, function ($query, $id) {
@@ -21,5 +24,9 @@ class QueryUsersAction
                 $query->where('created_at', '>=', $after);
             })
             ->get();
+
+        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Indexed users", User::class, $request->except('_token'));
+
+        return $users;
     }
 }

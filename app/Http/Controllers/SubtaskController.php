@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Log\LogAction;
+use App\Actions\Subtasks\DeleteSubtaskAction;
 use App\Actions\Subtasks\UpdateSubtaskAction;
-use App\Enums\ActionStatus;
+use App\Actions\Subtasks\UpdateSubtaskStatusAction;
 use App\Http\Requests\Subtasks\UpdateSubtaskRequest;
 use App\Http\Requests\Subtasks\UpdateSubtaskStatusRequest;
 use App\Models\Subtask;
@@ -21,12 +21,7 @@ class SubtaskController extends Controller
 
     public function destroyTaskSubtask(Task $task, Subtask $subtask)
     {
-        $subtask->delete();
-
-        LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Deleted subtask {$subtask->title} from {$task->title}",
-        Subtask::class);
-
-        LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Deleted subtask {$subtask->title}", $task);
+        DeleteSubtaskAction::do($subtask, $task);
 
         return back();
     }
@@ -35,16 +30,8 @@ class SubtaskController extends Controller
     {
         Gate::authorize('updateSubStatus', $subtask);
 
-        if (
-            $subtask->task->status == "COMPLETED" && !request()->exists('is_done')
-        ) {
-            LogAction::do(\Auth::user(), ActionStatus::FAILURE, "Failed to update subtask. Reason: The correlating task is already finished.");
+        $back = back();
 
-            return back()->withErrors(['subtasks' => 'This task is already declared as finished.']);
-        }
-
-        $subtask->update(['is_completed' => $request->exists('is_done')]);
-
-        return back();
+        return UpdateSubtaskStatusAction::do($subtask, $request, $back);
     }
 }

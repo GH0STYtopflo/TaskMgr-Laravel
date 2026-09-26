@@ -9,7 +9,6 @@ use App\Actions\Comments\UpdateTaskCommentAction;
 use App\Actions\Log\LogAction;
 use App\Enums\ActionStatus;
 use App\Http\Requests\Comments\CreateOrUpdateTaskCommentRequest;
-use App\Http\Requests\Comments\CreateTaskCommentRequest;
 use App\Http\Requests\Comments\QueryCommentsRequest;
 use App\Models\Comment;
 use App\Models\Task;
@@ -20,8 +19,6 @@ class CommentController extends Controller
     public function index(QueryCommentsRequest $request)
     {
         $comments = QueryCommentsAction::do($request);
-
-        LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Queried comments.", Comment::class, $request->except('_token'));
 
         return view('comments.index', ['comments' => $comments]);
     }

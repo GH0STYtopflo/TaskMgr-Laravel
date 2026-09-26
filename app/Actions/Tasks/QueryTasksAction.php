@@ -2,8 +2,11 @@
 
 namespace App\Actions\Tasks;
 
+use App\Actions\Log\LogAction;
+use App\Enums\ActionStatus;
 use App\Http\Requests\Tasks\QueryTasksRequest;
 use App\Models\Task;
+use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
@@ -18,7 +21,7 @@ class QueryTasksAction
 
     private static function query(BelongsToMany|Builder $qb, Request $request): Collection
     {
-        return $qb->when($request->plt, function ($query) use ($request) {
+        $tasks = $qb->when($request->plt, function ($query) use ($request) {
             $query->where('priority', '<=', $request->plt);
         })
             ->when($request->pgt, function ($query) use ($request) {
@@ -41,5 +44,9 @@ class QueryTasksAction
             })
             ->orderByDesc($request->order_by ?? 'created_at')
             ->get();
+
+        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Queried tasks", Task::class, $request->except('_token'));
+
+        return $tasks;
     }
 }

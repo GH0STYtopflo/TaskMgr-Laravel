@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Categories\CategoryIndexAction;
+use App\Actions\Categories\CreateCategoryAction;
+use App\Actions\Categories\DeleteCategoryAction;
+use App\Actions\Categories\UpdateCategoryAction;
 use App\Actions\Log\LogAction;
 use App\Enums\ActionStatus;
 use App\Http\Requests\Categories\CreateCategoryRequest;
@@ -12,20 +16,12 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
-
-        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Indexed Categories.", Category::class);
-
-        return view('categories.index', ['categories' => $categories]);
+        return view('categories.index', ['categories' => CategoryIndexAction::do()]);
     }
 
     public function store(CreateCategoryRequest $request)
     {
-        $category = Category::create([
-            'title' => $request->title,
-        ]);
-
-        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Category created.", $category, $request->except('_token'));
+        CreateCategoryAction::do($request);
 
         return redirect()->route('categories.index');
     }
@@ -39,21 +35,15 @@ class CategoryController extends Controller
 
     public function update(CreateCategoryRequest $request, Category $category)
     {
-        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Category created.", $category, $request->except('_token'));
-
-        $category->update([
-            'title' => $request->title,
-        ]);
+        UpdateCategoryAction::do($request, $category);
 
         return redirect()->route('categories.show', ['category' => $category]);
     }
 
     public function destroy(Category $category)
     {
-        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Category deleted.", $category);
+        DeleteCategoryAction::do($category);
 
-        $category->delete();
-
-        return redirect('/categories');
+        return redirect()->route('categories.index');
     }
 }

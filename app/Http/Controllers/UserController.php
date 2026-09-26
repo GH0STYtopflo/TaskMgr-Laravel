@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Log\LogAction;
 use App\Actions\Tasks\QueryTasksAction;
+use App\Actions\Users\DeleteUserAction;
 use App\Actions\Users\QueryUsersAction;
 use App\Actions\Users\UpdateUserAction;
 use App\Enums\ActionStatus;
@@ -19,8 +20,6 @@ class UserController extends Controller
     public function index(QueryUsersRequest $request)
     {
         $users = QueryUsersAction::do($request);
-
-        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Indexed users", User::class, $request->except('_token'));
 
         return view('users.index', ['users' => $users]);
     }
@@ -52,13 +51,11 @@ class UserController extends Controller
     {
         Gate::authorize('vudd', $user);
 
-        LogAction::do(Auth::user(), ActionStatus::SUCCESS, "Deleted user", User::class);
+        DeleteUserAction::do($user);
 
         if ($user->is(Auth::user())) {
             Auth::logout();
         }
-
-        $user->delete();
 
         return redirect()->route('users.index');
     }

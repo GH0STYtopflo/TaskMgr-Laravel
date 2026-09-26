@@ -3,6 +3,8 @@
 namespace App\Actions\Comments;
 
 use App\Actions\Action;
+use App\Actions\Log\LogAction;
+use App\Enums\ActionStatus;
 use App\Http\Requests\Comments\QueryCommentsRequest;
 use App\Models\Comment;
 use Illuminate\Support\Collection;
@@ -11,7 +13,7 @@ class QueryCommentsAction implements Action
 {
     public static function do(QueryCommentsRequest $request): Collection
     {
-        return Comment::query()
+        $comments = Comment::query()
             ->when($request->username, function ($query, $username) {
                 $query->getModel()->user()->whereUsername($username);
             })->when($request->task_id, function ($query, $task_id) {
@@ -24,6 +26,12 @@ class QueryCommentsAction implements Action
                 $query->where('body', 'like', "%$keyword%");
             })
             ->with(['task', 'user'])->get();
+
+        LogAction::do(\Auth::user(), ActionStatus::SUCCESS, "Queried comments.",
+            Comment::class, $request->except('_token'));
+
+
+        return $comments;
     }
 
 }
