@@ -16,7 +16,7 @@ class NonAdminUpdateAction
         if (isset($request->task_is_done) && $task->subtasks()->where('is_completed', '0')->exists()) {
             LogAction::do(Auth::user(), ActionStatus::FAILURE, "Failed to update task status. Reason: Task has unfinished subtasks");
 
-            $back->withErrors(['finished' => "task has active subtasks."]);
+            return $back->withErrors(['finished' => "task has active subtasks."]);
         }
 
         $task->update([

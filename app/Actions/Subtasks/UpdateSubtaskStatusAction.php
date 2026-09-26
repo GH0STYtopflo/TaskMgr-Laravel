@@ -18,7 +18,7 @@ class UpdateSubtaskStatusAction
         ) {
             LogAction::do(Auth::user(), ActionStatus::FAILURE, "Failed to update subtask. Reason: The correlating task is already finished.");
 
-            $back->withErrors(['subtasks' => 'This task is already declared as finished.']);
+            return $back->withErrors(['subtasks' => 'This task is already declared as finished.']);
         }
 
         $subtask->update(['is_completed' => $request->exists('is_done')]);
