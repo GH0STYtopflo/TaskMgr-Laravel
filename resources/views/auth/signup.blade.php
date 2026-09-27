@@ -1,30 +1,55 @@
 <x-layout title="Signup">
-    <div class="max-w-3xl m-auto p-10 rounded-xl flex flex-col" style="background-color: #08032a;">
-        <div class="mx-auto mb-15">
-            <h2 class="text-white font-bold text-4xl">
-                Signup
-            </h2>
-        </div>
-        <form action="/signup" method="POST" class="px-10 w-130 flex flex-col space-y-5">
+    <div class="max-w-sm mx-auto mt-10 p-7 rounded-3xl"
+         style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
+        <h2 class="text-2xl font-bold text-center mb-6" style="color: var(--md-text)">
+            Create Account
+        </h2>
+
+        <form action="/signup" method="POST" class="space-y-4">
             @csrf
 
-            <input type="text" name="username" placeholder="username"
-                   class="bg-white p-2 rounded" required>
-            @error('username')
-            <x-error :message="$message"></x-error>
-            @enderror
-            <input type="password" name="password" placeholder="password"
-                   class="bg-white p-2 rounded" required>
-            @error('password')
-            <x-error :message="$message"></x-error>
-            @enderror
-            <input type="email" name="email" placeholder="email"
-                   class="bg-white p-2 rounded">
-            @error('email')
-            <x-error :message="$message"></x-error>
-            @enderror
-            <input type="submit"
-                   class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl">
+            <div>
+                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Username</label>
+                <input type="text" name="username" placeholder="Choose a username"
+                       class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
+                       style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                       required>
+                @error('username')
+                    <x-error :message="$message"></x-error>
+                @enderror
+            </div>
+
+            <div>
+                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Email</label>
+                <input type="email" name="email" placeholder="your@email.com"
+                       class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
+                       style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
+                @error('email')
+                    <x-error :message="$message"></x-error>
+                @enderror
+            </div>
+
+            <div>
+                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Password</label>
+                <input type="password" name="password" placeholder="Create a password"
+                       class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
+                       style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                       required>
+                @error('password')
+                    <x-error :message="$message"></x-error>
+                @enderror
+            </div>
+
+            <button type="submit"
+                    class="w-full font-semibold py-2.5 rounded-full text-sm mt-2 transition-transform duration-150 active:scale-95"
+                    style="background-color: var(--md-primary); color: var(--md-on-primary)">
+                Create Account
+            </button>
+
+            <p class="text-center text-xs pt-1" style="color: var(--md-text-dim)">
+                Already have an account?
+                <a href="{{ route('login') }}" class="font-semibold" style="color: var(--md-primary)">Sign in</a>
+            </p>
         </form>
     </div>
 </x-layout>

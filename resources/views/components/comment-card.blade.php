@@ -1,36 +1,40 @@
-<div class="w-full p-4 rounded-xl flex flex-col" style="background-color: #8d0c97">
-    <div class="w-full flex justify-between">
-        <label class="text-white font-bold">{{$comment->user->username}}</label>
-        <div>
-            <label class="text-white font-bold">Time: </label>
-            <label class="text-white">
-                {{ (new DateTimeImmutable($comment->created_at))->setTimezone(new DateTimeZone('Asia/Tehran'))->format('Y-m-d H:i:s') }}
-            </label>
-        </div>
+<div class="rounded-xl px-4 py-3.5" style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
+    <div class="flex justify-between items-baseline mb-2.5">
+        <p class="font-semibold text-sm" style="color: var(--md-text)">{{ $comment->user->username }}</p>
+        <p class="text-xs" style="color: var(--md-text-dim)">
+            {{ (new DateTimeImmutable($comment->created_at))->setTimezone(new DateTimeZone('Asia/Tehran'))->format('M d, H:i') }}
+        </p>
     </div>
-    <hr class="mt-3">
-    <form method="POST" action={{"/tasks/" . $comment->task->id . "/comments/" . $comment->id}}>
-        <textarea name="body" class="w-full mt-2 text-white" rows="5" {{$comment->user->is(Auth::user()) || Auth::user()->is_admin ? "" : "readonly"}}>{{$comment->body}}</textarea>
+
+    <form method="POST" action="{{ "/tasks/" . $comment->task->id . "/comments/" . $comment->id }}">
+        <textarea
+            name="body"
+            class="w-full text-sm rounded-lg px-3 py-2 resize-none focus:outline-none"
+            style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+            rows="2"
+            {{ !($comment->user->is(Auth::user()) || Auth::user()->is_admin) ? 'readonly' : '' }}>{{ $comment->body }}</textarea>
 
         @if($comment->user->is(Auth::user()))
             @csrf
             @method('PATCH')
-            <input type="submit"
-                   value="Edit"
-                   class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold">
+            <button type="submit"
+                    class="w-full mt-2 text-xs font-semibold py-1.5 rounded-full transition-transform duration-150 active:scale-95"
+                    style="background-color: var(--md-primary); color: var(--md-on-primary)">
+                Update
+            </button>
         @endif
     </form>
 
     @if($comment->user->is(Auth::user()) || Auth::user()->is_admin)
-        <form class="mt-3" method="POST" action={{"/tasks/" . $comment->task->id . "/comments/" . $comment->id}}>
+        <form class="mt-1.5" method="POST" action="{{ "/tasks/" . $comment->task->id . "/comments/" . $comment->id }}">
             @csrf
             @method('DELETE')
 
-            <input type="submit"
-                   value="Delete"
-                   class="bg-red-900 w-full p-2 cursor-pointer transition rounded-xl font-bold">
+            <button type="submit"
+                    class="w-full text-xs font-semibold py-1.5 rounded-full transition-transform duration-150 active:scale-95"
+                    style="background-color: var(--md-error-container); color: var(--md-error)">
+                Delete
+            </button>
         </form>
     @endif
-
-
 </div>

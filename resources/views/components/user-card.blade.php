@@ -1,19 +1,12 @@
-<div class="w-full p-4 rounded-xl flex flex-col" style="background-color: #8d0c97">
-    <a href="{{"/users/$user->id"}}" class="space-y-5">
-        <div class="w-full flex justify-center space-x-1">
-            <label class="text-white font-bold">Id:</label>
-            <label class="text-white">{{$user->id}}</label>
+<a href="{{ "/users/$user->id" }}" class="block">
+    <div class="rounded-xl px-4 py-3.5 transition-colors duration-150"
+         style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)"
+         onmouseover="this.style.backgroundColor='var(--md-surface-2)'"
+         onmouseout="this.style.backgroundColor='var(--md-surface-1)'">
+        <div class="flex justify-between items-baseline">
+            <p class="font-semibold text-sm" style="color: var(--md-text)">{{ $user->username }}</p>
+            <p class="text-xs" style="color: var(--md-text-dim)">#{{ $user->id }}</p>
         </div>
-        <hr>
-        <div class="flex justify-between w-full">
-            <div class="w-full">
-                <label class="text-white font-bold">Username:</label>
-                <label class="text-white">{{$user->username}}</label>
-            </div>
-            <div class="w-full">
-                <label class="text-white font-bold">Joined at:</label>
-                <label class="text-white">{{$user->created_at}}</label>
-            </div>
-        </div>
-    </a>
-</div>
+        <p class="text-xs mt-1" style="color: var(--md-text-dim)">Joined {{ \Carbon\Carbon::parse($user->created_at)->format('M Y') }}</p>
+    </div>
+</a>

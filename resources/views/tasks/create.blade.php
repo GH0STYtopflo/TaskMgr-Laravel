@@ -4,79 +4,106 @@
 ])
 
 <x-layout title="Create Task">
-    <div class="max-w-1/3 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10"
-         style="background-color: #08032a">
-        <div class="mx-auto mb-10">
-            <h2 class="text-white font-bold text-3xl">
-                Create a new task
-            </h2>
-        </div>
+    <div class="max-w-lg mx-auto w-full p-7 rounded-2xl"
+         style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
+        <h2 class="text-xl font-bold mb-5" style="color: var(--md-text)">
+            Create a new task
+        </h2>
 
-        <form action="/tasks" method="POST">
+        <form action="/tasks" method="POST" class="space-y-4">
             @csrf
 
-            <input type="text" name="title" placeholder="title"
-                   class="bg-white p-2 rounded mb-5 w-full" required>
-            @error('title')
-            <x-error :message="$message"></x-error>
-            @enderror
+            <div>
+                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Title</label>
+                <input type="text" name="title" placeholder="Task title"
+                       class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
+                       style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                       required>
+                @error('title')
+                    <x-error :message="$message"></x-error>
+                @enderror
+            </div>
 
-            <textarea class="bg-white w-full p-2 rounded mb-5" placeholder="Description" name="description"
-                      rows="5"></textarea>
-            @error('description')
-            <x-error :message="$message"></x-error>
-            @enderror
+            <div>
+                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Description</label>
+                <textarea name="description" placeholder="Description"
+                          class="w-full px-3.5 py-2.5 rounded-lg text-sm resize-none focus:outline-none"
+                          style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                          rows="3"></textarea>
+                @error('description')
+                    <x-error :message="$message"></x-error>
+                @enderror
+            </div>
 
-            <input type="number" name="priority" class="w-full p-2 rounded bg-white mb-5" placeholder="priority"
-                   required>
-            @error('priority')
-            <x-error :message="$message"></x-error>
-            @enderror
+            <div>
+                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Priority</label>
+                <input type="number" name="priority" placeholder="Priority"
+                       class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
+                       style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                       required>
+                @error('priority')
+                    <x-error :message="$message"></x-error>
+                @enderror
+            </div>
 
-            <div class="w-full flex justify-between space-x-2 mb-5">
-                <div class="flex flex-col w-full">
-                    <h3 class="text-white font-bold"> Categories To Assign</h3>
-                    <select name="categories[]" class="w-full bg-white rounded p-2" multiple>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Categories</label>
+                    <select name="categories[]" class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                            style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                            multiple>
                         @foreach($categories as $category)
-                            <option value="{{$category->id}}">
-                                {{$category->title}}
-                            </option>
+                            <option value="{{ $category->id }}">{{ $category->title }}</option>
                         @endforeach
                     </select>
                     @error('categories[]')
-                    <x-error :message="$message"></x-error>
+                        <x-error :message="$message"></x-error>
                     @enderror
                 </div>
 
-                <div class="flex flex-col w-full">
-                    <h3 class="text-white font-bold"> Users To Assign</h3>
-                    <select name="users[]" class="w-full bg-white rounded p-2" multiple>
+                <div>
+                    <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Users</label>
+                    <select name="users[]" class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                            style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                            multiple>
                         @foreach($users as $user)
-                            <option value="{{$user->id}}">
-                                {{$user->username}}
-                            </option>
+                            <option value="{{ $user->id }}">{{ $user->username }}</option>
                         @endforeach
                     </select>
                     @error('users[]')
-                    <x-error :message="$message"></x-error>
+                        <x-error :message="$message"></x-error>
                     @enderror
                 </div>
             </div>
 
-            <input type="datetime-local" name="deadline" class="w-full bg-white p-2 mb-5 rounded" min="{{ now()->format('Y-m-d\TH:i')}}" required>
-            @error('deadline')
-            <x-error :message="$message"></x-error>
-            @enderror
+            <div>
+                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Deadline</label>
+                <input type="datetime-local" name="deadline"
+                       class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
+                       style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                       min="{{ now()->format('Y-m-d\TH:i') }}"
+                       required>
+                @error('deadline')
+                    <x-error :message="$message"></x-error>
+                @enderror
+            </div>
 
-            <textarea class="bg-white w-full p-2 rounded mb-5" placeholder="Subtasks (separated by newlines)"
-                      name="subtasks" rows="5"></textarea>
-            @error('subtasks')
-            <x-error :message="$message"></x-error>
-            @enderror
+            <div>
+                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Subtasks (one per line)</label>
+                <textarea name="subtasks" placeholder="Subtasks"
+                          class="w-full px-3.5 py-2.5 rounded-lg text-sm resize-none focus:outline-none"
+                          style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                          rows="3"></textarea>
+                @error('subtasks')
+                    <x-error :message="$message"></x-error>
+                @enderror
+            </div>
 
-            <input type="submit"
-                   value="Create"
-                   class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
+            <button type="submit"
+                    class="w-full font-semibold py-2.5 rounded-full text-sm mt-1 transition-transform duration-150 active:scale-95"
+                    style="background-color: var(--md-primary); color: var(--md-on-primary)">
+                Create
+            </button>
             @error('task')
                 <x-error :message="$message"></x-error>
             @enderror

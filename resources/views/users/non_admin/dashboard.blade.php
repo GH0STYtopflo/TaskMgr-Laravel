@@ -1,67 +1,67 @@
 <x-layout title="User Dashboard">
-    <div class="w-full flex flex-col mx-auto justify-between p-10 rounded-xl mt-10">
-        <a href="{{"/users/" . Auth::id()}}" class="flex justify-center w-full">
-            <label class="p-4 bg-pink-500 w-1/5 text-center text-white font-bold rounded-2xl cursor-pointer text-2xl mb-15">Your account</label>
-        </a>
+    <div class="max-w-3xl mx-auto w-full">
+        <div class="flex justify-center mb-6">
+            <a href="{{ "/users/" . Auth::id() }}"
+               class="px-5 py-2 rounded-full text-sm font-semibold transition-transform duration-150 active:scale-95"
+               style="background-color: var(--md-primary); color: var(--md-on-primary)">
+                Your account
+            </a>
+        </div>
 
-        <div class="max-w-1/3 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10 mb-5"
-             style="background-color: #08032a">
-            <div class="mx-auto mb-10">
-                <h2 class="text-white font-bold text-3xl">
-                    Query Tasks
-                </h2>
-            </div>
+        <div class="p-6 rounded-2xl mb-6" style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
+            <h2 class="text-lg font-bold mb-4" style="color: var(--md-text)">Query Tasks</h2>
 
-            <form action="{{ route('users.dashboard', Auth::user()) }}" method="GET">
-                <div class="grid grid-cols-2 gap-2">
+            <form action="{{ route('users.dashboard', Auth::user()) }}" method="GET" class="space-y-3">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="text-white">Priority less than</label>
+                        <label class="text-xs font-medium block mb-1" style="color: var(--md-text-dim)">Priority less than</label>
                         <input type="number" name="plt"
-                               class="bg-white p-2 rounded mb-5 w-full">
+                               class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                               style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
                     </div>
-
                     <div>
-                        <label class="text-white">Priority greater than</label>
+                        <label class="text-xs font-medium block mb-1" style="color: var(--md-text-dim)">Priority greater than</label>
                         <input type="number" name="pgt"
-                               class="bg-white p-2 rounded mb-5 w-full">
+                               class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                               style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
                     </div>
-
                     <div>
-                        <label class="text-white">Created before</label>
+                        <label class="text-xs font-medium block mb-1" style="color: var(--md-text-dim)">Created before</label>
                         <input type="datetime-local" name="created_before"
-                               class="w-full bg-white p-2 mb-5 rounded">
+                               class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                               style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
                     </div>
-
                     <div>
-                        <label class="text-white">Created after</label>
+                        <label class="text-xs font-medium block mb-1" style="color: var(--md-text-dim)">Created after</label>
                         <input type="datetime-local" name="created_after"
-                               class="w-full bg-white p-2 mb-5 rounded">
+                               class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                               style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
                     </div>
-
                     <div>
-                        <label class="text-white">Deadline before</label>
+                        <label class="text-xs font-medium block mb-1" style="color: var(--md-text-dim)">Deadline before</label>
                         <input type="datetime-local" name="deadline_before"
-                               class="w-full bg-white p-2 mb-5 rounded">
+                               class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                               style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
                     </div>
-
                     <div>
-                        <label class="text-white">Deadline after</label>
+                        <label class="text-xs font-medium block mb-1" style="color: var(--md-text-dim)">Deadline after</label>
                         <input type="datetime-local" name="deadline_after"
-                               class="w-full bg-white p-2 mb-5 rounded">
+                               class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                               style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
                     </div>
-
                     <div>
-                        <label class="text-white">Status</label>
-                        <select name="status" class="w-full bg-white rounded p-2 mb-5">
+                        <label class="text-xs font-medium block mb-1" style="color: var(--md-text-dim)">Status</label>
+                        <select name="status" class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                                style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
                             <option value="">Any status</option>
                             <option value="ONGOING">Ongoing</option>
                             <option value="COMPLETED">Completed</option>
                         </select>
                     </div>
-
                     <div>
-                        <label class="text-white">Order by</label>
-                        <select name="order_by" class="w-full bg-white rounded p-2 mb-5">
+                        <label class="text-xs font-medium block mb-1" style="color: var(--md-text-dim)">Order by</label>
+                        <select name="order_by" class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                                style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
                             <option value="created_at">Created at</option>
                             <option value="updated_at">Updated at</option>
                             <option value="status">Status</option>
@@ -70,24 +70,24 @@
                     </div>
                 </div>
 
-                <input type="submit"
-                       value="Query"
-                       class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
+                <button type="submit"
+                        class="w-full font-semibold py-2.5 rounded-full text-sm mt-1 transition-transform duration-150 active:scale-95"
+                        style="background-color: var(--md-primary); color: var(--md-on-primary)">
+                    Query
+                </button>
             </form>
         </div>
 
-        <label class="text-3xl text-white mx-auto font-bold mb-5">Your tasks</label>
+        <h2 class="text-lg font-bold mb-3 px-1" style="color: var(--md-text)">Your tasks</h2>
 
         @if(count($tasks) > 0)
-            <div class="grid grid-cols-4 gap-4">
+            <div class="space-y-2">
                 @foreach($tasks as $task)
-                    <x-task-card
-                        :task="$task"
-                    />
+                    <x-task-card :task="$task" />
                 @endforeach
             </div>
         @else
-            <p class="text-white mt-2">No tasks available</p>
+            <p class="text-sm text-center py-8" style="color: var(--md-text-dim)">No tasks available</p>
         @endif
     </div>
 </x-layout>

@@ -1,93 +1,94 @@
 <x-layout title="User">
+    <div class="max-w-lg mx-auto w-full space-y-6">
+        <div class="p-7 rounded-2xl" style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
+            <h2 class="text-xl font-bold mb-5 text-center" style="color: var(--md-text)">
+                User
+            </h2>
 
-    <div class="w-1/2 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10"
-         style="background-color: #08032a">
-        <div class="mx-auto mb-10 w-full flex flex-col">
-            <div class="w-full flex justify-center mb-5">
-                <h2 class="text-white font-bold text-3xl">
-                    User
-                </h2>
-            </div>
-
-            <form action="{{ route('users.update', $user) }}" method="POST">
+            <form action="{{ route('users.update', $user) }}" method="POST" class="space-y-3">
                 @csrf
                 @method('PATCH')
 
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <input type="text" class="bg-white rounded p-2 w-full" required readonly placeholder="Id: {{$user->id}}">
+                        <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">ID</label>
+                        <input type="text" disabled readonly
+                               class="w-full px-3 py-2 rounded-lg text-sm"
+                               style="background-color: var(--md-surface-2); color: var(--md-text-dim); border: 1px solid var(--md-surface-border)"
+                               value="{{ $user->id }}">
                     </div>
+                    <div>
+                        <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Username</label>
+                        <input type="text" name="username"
+                               class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                               style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                               required value="{{ $user->username }}">
+                        @error('username')
+                            <x-error :message="$message"></x-error>
+                        @enderror
+                    </div>
+                </div>
 
-                    <div>
-                        <input type="text" name="username" class="bg-white rounded p-2 w-full" required placeholder="username" value="{{$user->username}}">
-                    </div>
-                    @error('username')
+                <div>
+                    <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Email</label>
+                    <input type="text" name="email"
+                           class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
+                           style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                           required value="{{ $user->email }}">
+                    @error('email')
                         <x-error :message="$message"></x-error>
                     @enderror
+                </div>
 
-                    <div>
-                        <input type="text" name="email" class="bg-white rounded p-2 w-full" required  placeholder="email" value="{{$user->email}}">
-                    </div>
-                    @error('email')
-                    <x-error :message="$message"></x-error>
+                <div>
+                    <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">New Password</label>
+                    <input type="password" name="new_password" placeholder="Leave blank to keep current"
+                           class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
+                           style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
+                    @error('new_password')
+                        <x-error :message="$message"></x-error>
                     @enderror
                 </div>
 
-                <div class="mt-5">
-                    <label class="text-white font-bold">New Password</label>
-                    <input type="password" name="new_password" class="bg-white rounded p-2 w-full mt-3" placeholder="new password">
-                </div>
-                @error('new_password')
-                <x-error :message="$message"></x-error>
-                @enderror
-
-                <input type="submit"
-                       value="Update"
-                       class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
+                <button type="submit"
+                        class="w-full font-semibold py-2.5 rounded-full text-sm mt-1 transition-transform duration-150 active:scale-95"
+                        style="background-color: var(--md-primary); color: var(--md-on-primary)">
+                    Update
+                </button>
             </form>
 
             @can('admin-access')
-
-                <hr class="mt-5">
-
-                <div class="mt-5 mb-5">
-                    <label class="text-white font-bold mb-5">Tasks</label>
+                <div class="mt-6 pt-6" style="border-top: 1px solid var(--md-surface-border)">
+                    <h3 class="text-sm font-bold mb-3" style="color: var(--md-text)">Tasks</h3>
                     @if(count($user->tasks) > 0)
-                        <div class="grid grid-cols-2 space-x-2 gap-2">
+                        <div class="space-y-2">
                             @foreach($user->tasks as $task)
-                                <a href="{{"/tasks/$task->id"}}" class="mt-5 bg-blue-900 rounded flex justify-between p-4 w-full">
-                                    <div>
-                                        <div>
-                                            <label class="text-white font-bold">Task:</label>
-                                            <label class="text-white">{{$task->title}}</label>
-                                        </div>
-
-                                        <div>
-                                            <label class="text-white font-bold">Task Id:</label>
-                                            <label class="text-white">{{$task->id}}</label>
-                                        </div>
-                                    </div>
+                                <a href="{{ "/tasks/$task->id" }}"
+                                   class="block rounded-lg px-3.5 py-2.5"
+                                   style="background-color: var(--md-surface-2)">
+                                    <p class="text-sm font-medium" style="color: var(--md-text)">{{ $task->title }}</p>
+                                    <p class="text-xs mt-0.5" style="color: var(--md-text-dim)">Task ID: {{ $task->id }}</p>
                                 </a>
                             @endforeach
                         </div>
                     @else
-                        <p class="text-white">User is not currently assigned to any tasks</p>
+                        <p class="text-xs" style="color: var(--md-text-dim)">User is not currently assigned to any tasks</p>
                     @endif
                 </div>
-        </div>
             @endcan
+        </div>
 
         @can('vudd', $user)
             <form action="{{ route('users.destroy', $user) }}" method="POST">
                 @csrf
                 @method('DELETE')
-
-                <input type="submit"
-                       value="Delete Account"
-                       class="bg-red-900 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
+                <button type="submit"
+                        class="w-full font-semibold py-2.5 rounded-full text-sm transition-transform duration-150 active:scale-95"
+                        style="background-color: var(--md-error-container); color: var(--md-error)"
+                        onclick="return confirm('Delete this account?')">
+                    Delete Account
+                </button>
             </form>
         @endcan
-
     </div>
-
 </x-layout>

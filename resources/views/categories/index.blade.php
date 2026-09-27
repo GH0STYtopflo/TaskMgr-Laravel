@@ -3,38 +3,41 @@
 ])
 
 <x-layout title="Categories">
-    <div class="max-w-1/3 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10"
-         style="background-color: #08032a">
-        <div class="mx-auto mb-10">
-            <h2 class="text-white font-bold text-3xl">
-                Create a new task category
+    <div class="max-w-lg mx-auto w-full">
+        <div class="p-7 rounded-2xl mb-6" style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
+            <h2 class="text-xl font-bold mb-5" style="color: var(--md-text)">
+                Create a new category
             </h2>
+
+            <form action="/categories" method="POST" class="space-y-3">
+                @csrf
+                <div>
+                    <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Title</label>
+                    <input type="text" name="title" placeholder="Category title"
+                           class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
+                           style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
+                           required>
+                    @error('title')
+                        <x-error :message="$message"></x-error>
+                    @enderror
+                </div>
+                <button type="submit"
+                        class="w-full font-semibold py-2.5 rounded-full text-sm transition-transform duration-150 active:scale-95"
+                        style="background-color: var(--md-primary); color: var(--md-on-primary)">
+                    Create
+                </button>
+            </form>
         </div>
 
-        <form action="/categories" method="POST">
-            @csrf
-
-            <input type="text" name="title" placeholder="title"
-                   class="bg-white p-2 rounded mb-5 w-full" required>
-            @error('title')
-            <x-error :message="$message"></x-error>
-            @enderror
-            <input type="submit"
-                   value="Create"
-                   class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold">
-        </form>
-    </div>
-
-    <div class="w-full mt-10 flex flex-col">
-        <h1 class="mx-auto text-white font-bold text-2xl mb-5 max-w-1/3">Existing Categories</h1>
-        <ul class="mx-auto space-y-2 max-w-1/3">
+        <h3 class="text-sm font-bold mb-3 px-1" style="color: var(--md-text-dim)">Existing Categories</h3>
+        <div class="space-y-2">
             @if(count($categories) > 0)
                 @foreach($categories as $category)
                     <x-card :title="$category->title" :id="$category->id"></x-card>
                 @endforeach
             @else
-                <p class="text-white"> No categories found. Start by creating one </p>
+                <p class="text-sm text-center py-8" style="color: var(--md-text-dim)">No categories found. Start by creating one.</p>
             @endif
-        </ul>
+        </div>
     </div>
 </x-layout>
