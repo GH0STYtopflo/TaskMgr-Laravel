@@ -1,49 +1,29 @@
 <x-layout title="Login">
-    <div class="max-w-sm mx-auto mt-10 p-7 rounded-3xl"
-         style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
-        <h2 class="text-2xl font-bold text-center mb-6" style="color: var(--md-text)">
-            Welcome Back
-        </h2>
-
-        <form action="/login" method="POST" class="space-y-4">
+    <div class="max-w-3xl m-auto p-10 rounded-xl flex flex-col" style="background-color: #08032a;">
+        <div class="mx-auto mb-15">
+            <h2 class="text-white font-bold text-4xl">
+                Login
+            </h2>
+        </div>
+        <form action="/login" method="POST" class="px-10 w-130 flex flex-col space-y-5">
             @csrf
 
-            <div>
-                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Username</label>
-                <input type="text" name="username" placeholder="Enter your username"
-                       class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
-                       style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                       required>
-                @error('username')
-                    <x-error :message="$message"></x-error>
-                @enderror
-            </div>
+            <input type="text" name="username" placeholder="username"
+                   class="bg-white p-2 rounded" required>
+            @error('username')
+            <x-error :message="$message"></x-error>
+            @enderror
+            <input type="password" name="password" placeholder="password"
+                   class="bg-white p-2 rounded" required>
+            @error('password')
+            <x-error :message="$message"></x-error>
+            @enderror
 
-            <div>
-                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Password</label>
-                <input type="password" name="password" placeholder="Enter your password"
-                       class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
-                       style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                       required>
-                @error('password')
-                    <x-error :message="$message"></x-error>
-                @enderror
-            </div>
-
+            <input type="submit"
+                   class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl">
             @error('credentials')
                 <x-error :message="$message"></x-error>
             @enderror
-
-            <button type="submit"
-                    class="w-full font-semibold py-2.5 rounded-full text-sm mt-2 transition-transform duration-150 active:scale-95"
-                    style="background-color: var(--md-primary); color: var(--md-on-primary)">
-                Sign In
-            </button>
-
-            <p class="text-center text-xs pt-1" style="color: var(--md-text-dim)">
-                Don't have an account?
-                <a href="{{ route('signup') }}" class="font-semibold" style="color: var(--md-primary)">Sign up</a>
-            </p>
         </form>
     </div>
 </x-layout>

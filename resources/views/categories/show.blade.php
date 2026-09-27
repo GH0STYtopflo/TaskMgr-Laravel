@@ -1,43 +1,36 @@
 @props(['category'])
 
 <x-layout title="Edit Category">
-    <div class="max-w-sm mx-auto w-full p-7 rounded-2xl"
-         style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
-        <h2 class="text-xl font-bold mb-5" style="color: var(--md-text)">
-            Edit Category
-        </h2>
+    <div class="max-w-1/3 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10"
+         style="background-color: #08032a">
+        <div class="mx-auto mb-10">
+            <h2 class="text-white font-bold text-3xl">
+                Edit Task
+            </h2>
+        </div>
 
-        <form action="/categories/{{ $category->id }}" method="POST" class="space-y-3">
+        <form action="/categories/{{$category->id}}" method="POST">
             @csrf
             @method('PATCH')
 
-            <div>
-                <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Title</label>
-                <input type="text" name="title"
-                       class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
-                       style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                       required value="{{ $category->title }}">
-                @error('title')
-                    <x-error :message="$message"></x-error>
-                @enderror
-            </div>
-
-            <button type="submit"
-                    class="w-full font-semibold py-2.5 rounded-full text-sm transition-transform duration-150 active:scale-95"
-                    style="background-color: var(--md-primary); color: var(--md-on-primary)">
-                Update
-            </button>
+            <input type="text" name="title" placeholder="title"
+                   class="bg-white p-2 rounded mb-5 w-full" required value={{$category->title}}>
+            @error('title')
+            <x-error :message="$message"></x-error>
+            @enderror
+            <input type="submit"
+                   value="Update"
+                   class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold">
         </form>
 
-        <form action="/categories/{{ $category->id }}" method="post" class="mt-3">
+        <form action="/categories/{{$category->id}}" method="post">
             @csrf
             @method('DELETE')
-            <button type="submit"
-                    class="w-full font-semibold py-2.5 rounded-full text-sm transition-transform duration-150 active:scale-95"
-                    style="background-color: var(--md-error-container); color: var(--md-error)"
-                    onclick="return confirm('Delete this category?')">
-                Delete
-            </button>
+
+            <input type="submit"
+                   value="Delete"
+                   class="bg-red-900 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-10">
         </form>
     </div>
+
 </x-layout>

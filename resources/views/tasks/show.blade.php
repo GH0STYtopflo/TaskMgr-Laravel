@@ -3,208 +3,177 @@
 ])
 
 <x-layout title="Edit Task">
-    <div class="max-w-lg mx-auto w-full space-y-6">
-        <!-- Edit Form -->
-        <div class="p-7 rounded-2xl" style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
-            <h2 class="text-xl font-bold mb-5" style="color: var(--md-text)">
+
+    <div class="w-1/2 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10"
+         style="background-color: #08032a">
+        <div class="mx-auto mb-10">
+            <h2 class="text-white font-bold text-3xl">
                 Edit Task
             </h2>
-
-            <form action="/tasks/{{ $task->id }}" method="POST" class="space-y-4">
-                @csrf
-                @method('PATCH')
-
-                <div>
-                    <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Title</label>
-                    <input type="text" name="title"
-                           class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
-                           style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                           required
-                           value="{{ $task->title }}">
-                    @error('title')
-                        <x-error :message="$message"></x-error>
-                    @enderror
-                </div>
-
-                <div>
-                    <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Description</label>
-                    <textarea name="description"
-                              class="w-full px-3.5 py-2.5 rounded-lg text-sm resize-none focus:outline-none"
-                              style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                              rows="3">{{ $task->description }}</textarea>
-                    @error('description')
-                        <x-error :message="$message"></x-error>
-                    @enderror
-                </div>
-
-                <div>
-                    <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Priority</label>
-                    <input type="number" name="priority"
-                           class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
-                           style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                           required value="{{ $task->priority }}">
-                    @error('priority')
-                        <x-error :message="$message"></x-error>
-                    @enderror
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Categories</label>
-                        <select name="categories[]" class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
-                                style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                                multiple>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" @if($task->categories->contains($category)) selected @endif>
-                                    {{ $category->title }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('categories[]')
-                            <x-error :message="$message"></x-error>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Users</label>
-                        <select name="users[]" class="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
-                                style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                                multiple>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}" @if($task->users->contains($user)) selected @endif>
-                                    {{ $user->username }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('users[]')
-                            <x-error :message="$message"></x-error>
-                        @enderror
-                    </div>
-                </div>
-
-                <div>
-                    <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">Deadline</label>
-                    <input type="datetime-local" name="deadline"
-                           class="w-full px-3.5 py-2.5 rounded-lg text-sm focus:outline-none"
-                           style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                           required
-                           value="{{ (new DateTimeImmutable($task->deadline))->format('Y-m-d\TH:i:s') }}">
-                    @error('deadline')
-                        <x-error :message="$message"></x-error>
-                    @enderror
-                </div>
-
-                <div>
-                    <label class="text-xs font-medium block mb-1.5" style="color: var(--md-text-dim)">New subtasks (one per line)</label>
-                    <textarea name="subtasks"
-                              class="w-full px-3.5 py-2.5 rounded-lg text-sm resize-none focus:outline-none"
-                              style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                              rows="2"></textarea>
-                </div>
-
-                <label class="flex items-center gap-2.5 py-1 cursor-pointer">
-                    <input type="checkbox" name="task_is_done" class="w-4 h-4 rounded cursor-pointer accent-purple-400" @if($task->status == 'COMPLETED') checked @endif>
-                    <span class="text-sm" style="color: var(--md-text)">Set Finished</span>
-                </label>
-                @error('finished')
-                    <x-error :message="$message"></x-error>
-                @enderror
-
-                <button type="submit"
-                        class="w-full font-semibold py-2.5 rounded-full text-sm transition-transform duration-150 active:scale-95"
-                        style="background-color: var(--md-primary); color: var(--md-on-primary)">
-                    Save Changes
-                </button>
-                @error('update')
-                    <x-error :message="$message"></x-error>
-                @enderror
-            </form>
-
-            <form action="/tasks/{{ $task->id }}" method="POST" class="mt-3">
-                @csrf
-                @method('DELETE')
-                <button type="submit"
-                        class="w-full font-semibold py-2.5 rounded-full text-sm transition-transform duration-150 active:scale-95"
-                        style="background-color: var(--md-error-container); color: var(--md-error)"
-                        onclick="return confirm('Delete this task?')">
-                    Delete
-                </button>
-            </form>
         </div>
 
-        <!-- Subtasks -->
-        <div class="p-7 rounded-2xl" style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
-            <h3 class="text-sm font-bold mb-3" style="color: var(--md-text)">Subtasks</h3>
+        <form action="/tasks/{{$task->id}}" method="POST">
+            @csrf
+            @method('PATCH')
 
-            @if(count($task->subtasks) > 0)
-                <div class="space-y-2">
-                    @foreach($task->subtasks as $subtask)
-                        <div class="flex items-center gap-2 p-2.5 rounded-lg" style="background-color: var(--md-surface-2)">
-                            <form action="{{ route('tasks.subtasks.update', [$task, $subtask]) }}" method="post" class="flex-1 flex items-center gap-2">
-                                @csrf
-                                @method('PATCH')
+            <input type="text" name="title" placeholder="title"
+                   class="bg-white p-2 rounded mb-5 w-full"
+                   required
+                   value="{{$task->title}}"
+            >
+            @error('title')
+            <x-error :message="$message"></x-error>
+            @enderror
 
-                                <input type="text" name="title"
-                                       class="flex-1 px-2.5 py-1.5 rounded text-sm focus:outline-none"
-                                       style="background-color: var(--md-surface-1); color: var(--md-text); border: 1px solid var(--md-surface-border)"
-                                       required
-                                       value="{{ $subtask->title }}">
+            <textarea class="bg-white w-full p-2 rounded mb-5" placeholder="Description" name="description"
+                      rows="5"> {{$task->description}} </textarea>
+            @error('description')
+            <x-error :message="$message"></x-error>
+            @enderror
 
-                                <input type="checkbox" name="is_done" class="w-4 h-4 rounded cursor-pointer accent-purple-400" @if($subtask->is_completed) checked @endif>
+            <input type="number" name="priority" class="w-full p-2 rounded bg-white mb-5" placeholder="priority"
+                   required value={{$task->priority}}>
+            @error('priority')
+            <x-error :message="$message"></x-error>
+            @enderror
 
-                                <button type="submit" class="px-3 py-1.5 rounded-full text-xs font-semibold"
-                                        style="background-color: var(--md-primary); color: var(--md-on-primary)">
-                                    Update
-                                </button>
-                            </form>
-
-                            <form action="{{ route('tasks.subtasks.destroy', [$task, $subtask]) }}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="px-3 py-1.5 rounded-full text-xs font-semibold"
-                                        style="background-color: var(--md-error-container); color: var(--md-error)">
-                                    Delete
-                                </button>
-                            </form>
-                        </div>
-                    @endforeach
+            <div class="w-full flex justify-between space-x-2 mb-5">
+                <div class="flex flex-col w-full">
+                    <label class="text-white font-bold"> Categories To Assign</label>
+                    <select name="categories[]" class="w-full bg-white rounded p-2" multiple>
+                        @foreach($categories as $category)
+                            <option value="{{$category->id}}"
+                                    @if($task->categories->contains($category)) selected @endif>
+                                {{$category->title}}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('categories[]')
+                    <x-error :message="$message"></x-error>
+                    @enderror
                 </div>
-            @else
-                <p class="text-xs" style="color: var(--md-text-dim)">No subtasks yet.</p>
-            @endif
-            @error('subtasks')
+
+                <div class="flex flex-col w-full">
+                    <label class="text-white font-bold"> Users To Assign</label>
+                    <select name="users[]" class="w-full bg-white rounded p-2" multiple>
+                        @foreach($users as $user)
+                            <option value="{{$user->id}}" @if($task->users->contains($user)) selected @endif>
+                                {{$user->username}}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('users[]')
+                    <x-error :message="$message"></x-error>
+                    @enderror
+                </div>
+            </div>
+
+            <input type="datetime-local" name="deadline" class="w-full bg-white p-2 mb-5 rounded" required
+                   value="{{ (new DateTimeImmutable($task->deadline))->format('Y-m-d\TH:i:s') }}"
+            @error('deadline')
+            <x-error :message="$message"></x-error>
+            @enderror
+
+            <textarea class="bg-white w-full p-2 rounded mb-5" placeholder="New Subtasks (separated by newlines)"
+                      name="subtasks" rows="5"></textarea>
+
+            <div class="flex justify-center space-x-4 w-full">
+                <label class="text-white">Set Finished</label>
+                <input type="checkbox" class="scale-150" name="task_is_done" @if($task->status == 'COMPLETED') checked @endif>
+            </div>
+            @error('finished')
+            <x-error :message="$message"></x-error>
+            @enderror
+
+            <input type="submit"
+                   value="Edit"
+                   class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
+            @error('update')
                 <x-error :message="$message"></x-error>
             @enderror
-        </div>
+        </form>
 
-        <!-- Comments -->
-        <div class="p-7 rounded-2xl" style="background-color: var(--md-surface-1); border: 1px solid var(--md-surface-border)">
-            <h3 class="text-sm font-bold mb-3" style="color: var(--md-text)">Comments</h3>
+        <form action="/tasks/{{$task->id}}" method="POST">
+            @csrf
+            @method('DELETE')
 
-            <form action="{{ "/tasks/" . $task->id . "/comments" }}" method="POST" class="mb-4">
-                @csrf
-                <input type="text" name="body" placeholder="Add a comment..."
-                       class="w-full px-3.5 py-2.5 rounded-lg text-sm mb-2 focus:outline-none"
-                       style="background-color: var(--md-surface-2); color: var(--md-text); border: 1px solid var(--md-surface-border)">
-                @error('title')
-                    <x-error :message="$message"></x-error>
-                @enderror
-                <button type="submit"
-                        class="w-full font-semibold py-2 rounded-full text-sm transition-transform duration-150 active:scale-95"
-                        style="background-color: var(--md-primary); color: var(--md-on-primary)">
-                    Comment
-                </button>
-            </form>
+            <input type="submit"
+                   value="Delete"
+                   class="bg-red-900 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold mt-5">
+        </form>
 
-            <div class="space-y-2">
-                @if(count($comments) > 0)
-                    @foreach($comments as $comment)
-                        <x-comment-card :comment="$comment"></x-comment-card>
-                    @endforeach
-                @else
-                    <p class="text-xs" style="color: var(--md-text-dim)">No comments for this task</p>
-                @endif
+        <label class="text-white font-bold mt-15"> Subtasks </label>
+        @foreach($task->subtasks as $subtask)
+            <div class="flex justify-between items-center space-x-1">
+                <form action="{{ route('tasks.subtasks.update', [$task, $subtask]) }}" method="post" class="w-full flex justify-between items-center mb-5">
+                    @csrf
+                    @method('PATCH')
+
+                    <input type="text" name="title" placeholder="subtask"
+                           class="bg-white p-2 rounded w-full"
+                           required
+                           value="{{$subtask->title}}"
+                    >
+
+                    <div class="flex justify-center space-x-4 w-1/3">
+                        <label class="text-white">Completed</label>
+                        <input type="checkbox" class="scale-150" name="is_done" @if($subtask->is_completed) checked @endif>
+                    </div>
+
+                    <button type="submit" class="bg-pink-500 p-2 cursor-pointer transition duration-200 hover:scale-105 rounded font-bold">
+                        Update
+                    </button>
+                </form>
+
+                <form action="{{ route('tasks.subtasks.destroy', [$task, $subtask]) }}" method="post">
+                    @csrf
+                    @method('DELETE')
+
+                    <button type="submit" class="bg-red-900 p-2 cursor-pointer transition duration-200 hover:scale-105 rounded font-bold mb-5">
+                        Delete
+                    </button>
+                </form>
             </div>
-        </div>
+        @endforeach
+        @error('subtasks')
+        <x-error :message="$message"></x-error>
+        @enderror
     </div>
+
+    <div class="w-1/2 flex flex-col mx-auto justify-between p-10 rounded-xl mt-10 mb-5"
+         style="background-color: #08032a">
+        <div class="mx-auto mb-10">
+            <h2 class="text-white font-bold text-3xl">
+                Comment
+            </h2>
+        </div>
+
+        <form action="{{"/tasks/" . $task->id . "/comments"}}" method="POST">
+            @csrf
+
+            <input type="text" name="body" placeholder="comment"
+                   class="bg-white p-2 rounded mb-5 w-full">
+            @error('title')
+            <x-error :message="$message"></x-error>
+            @enderror
+            <input type="submit"
+                   value="Comment"
+                   class="bg-pink-500 w-full p-2 cursor-pointer transition duration-200 hover:scale-105 rounded-xl font-bold">
+        </form>
+
+        <div class="space-y-2 w-full mt-5">
+            <div class="mb-10">
+                <label class="text-white text-2xl font-bold">Comments</label>
+            </div>
+            @if(count($comments) > 0)
+                @foreach($comments as $comment)
+                    <x-comment-card :comment="$comment"></x-comment-card>
+                @endforeach
+            @else
+                <p class="text-white">No Comments for this task</p>
+            @endif
+        </div>
+
+    </div>
+
 </x-layout>
