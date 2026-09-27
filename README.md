@@ -2,6 +2,8 @@
 
 A task management application built with Laravel, featuring server-side rendering with Blade templates, database persistence with PostgreSQL, and role-based access control.
 
+[Check out screenshots](https://github.com/GH0STYtopflo/TaskMgr-Laravel/tree/main/screenshots)
+
 ## Technology Stack
 
 - **Framework**: Laravel
